@@ -1,5 +1,12 @@
 (() => {
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const FIRST_BUILD_MS = 900;   // how long the plan shows on page load
+  const PLAN_SWAP_MS = 260;     // plan state before the new trade's text appears
+  const PLAN_HOLD_MS = 320;     // new text shown as a plan before it is built
+
+  // Hero entrance: one sequence on load.
+  requestAnimationFrame(() => document.body.classList.add('is-loaded'));
 
   // Mobile menu
   const toggle = document.querySelector('.nav-toggle');
@@ -61,7 +68,7 @@
       slot('title').textContent = example.title;
       slot('sub').textContent = example.sub;
       slot('cta').textContent = example.cta;
-      slot('trust').querySelectorAll('span').forEach((item, index) => { item.textContent = example.trust[index]; });
+      slot('trust').querySelectorAll('li span').forEach((item, index) => { item.textContent = example.trust[index]; });
     };
 
     const show = key => {
@@ -73,14 +80,88 @@
       frame.classList.add('is-plano');
       timer = setTimeout(() => {
         fill(example);
-        timer = setTimeout(() => frame.classList.remove('is-plano'), 320);
-      }, 260);
+        timer = setTimeout(build, PLAN_HOLD_MS);
+      }, PLAN_SWAP_MS);
     };
 
+    // The drawing turns into the page, with one scan line sweeping over it.
+    const build = () => {
+      frame.classList.remove('is-plano');
+      frame.classList.remove('is-scanning');
+      void frame.offsetWidth; // restart the scan animation
+      frame.classList.add('is-scanning');
+    };
+    frame.addEventListener('animationend', () => frame.classList.remove('is-scanning'));
+
     tabs.forEach(tab => tab.addEventListener('click', () => show(tab.dataset.example)));
-    // Page load: the drawing becomes the page, once.
     if (reduceMotion) frame.classList.remove('is-plano');
-    else timer = setTimeout(() => frame.classList.remove('is-plano'), 700);
+    else timer = setTimeout(build, FIRST_BUILD_MS);
+
+    // Fine pointers tilt the demo window slightly toward the cursor.
+    const stage = document.querySelector('.demo-stage');
+    const win = frame.querySelector('.demo-window');
+    if (stage && win && !reduceMotion && finePointer) {
+      let raf = 0;
+      stage.addEventListener('pointermove', event => {
+        const box = stage.getBoundingClientRect();
+        const x = (event.clientX - box.left) / box.width - .5;
+        const y = (event.clientY - box.top) / box.height - .5;
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(() => {
+          win.style.setProperty('--ry', `${(x * 8).toFixed(2)}deg`);
+          win.style.setProperty('--rx', `${(-y * 6).toFixed(2)}deg`);
+        });
+      });
+      stage.addEventListener('pointerleave', () => {
+        cancelAnimationFrame(raf);
+        win.style.setProperty('--ry', '0deg');
+        win.style.setProperty('--rx', '0deg');
+      });
+    }
+  }
+
+  // Blueprint surfaces: the grid lights up in neon around the pointer.
+  if (!reduceMotion && finePointer) {
+    document.querySelectorAll('.on-blue').forEach(surface => {
+      let raf = 0;
+      surface.addEventListener('pointermove', event => {
+        const box = surface.getBoundingClientRect();
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(() => {
+          surface.style.setProperty('--mx', `${event.clientX - box.left}px`);
+          surface.style.setProperty('--my', `${event.clientY - box.top}px`);
+          surface.style.setProperty('--spot', '1');
+        });
+      });
+      surface.addEventListener('pointerleave', () => surface.style.setProperty('--spot', '0'));
+    });
+  }
+
+  // Scroll reveal, staggered inside lists. Only applied when it can be undone by the observer.
+  if (!reduceMotion && 'IntersectionObserver' in window) {
+    const groups = ['.section-head', '.service-list', '.included', '.compare', '.compare-note', '.steps', '.pair', '.faq', '.contact-copy', '.form', '.band'];
+    const targets = [];
+    document.querySelectorAll(groups.join(',')).forEach(element => {
+      if (element.closest('.hero')) return;
+      const items = element.matches('.service-list, .steps, .pair') ? [...element.children] : [element];
+      items.forEach((item, index) => {
+        item.style.setProperty('--rd', `${index * 90}ms`);
+        targets.push(item);
+      });
+    });
+    const revealer = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-in');
+        observer.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: .12 });
+    targets.forEach(item => {
+      // Anything already on screen at load stays put instead of flashing.
+      if (item.getBoundingClientRect().top < window.innerHeight * .9) return;
+      item.classList.add('reveal');
+      revealer.observe(item);
+    });
   }
 
   // Contact form: send in place, fall back to a normal POST if fetch is unavailable

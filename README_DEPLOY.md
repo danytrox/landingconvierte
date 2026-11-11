@@ -1,4 +1,4 @@
-# Publicar HazTuWeb
+# Publicar LandingConvierte
 
 ## Opción recomendada: Cloudflare Pages + GitHub
 
@@ -8,9 +8,9 @@
 ```bash
 git init
 git add index.html README_DEPLOY.md
-git commit -m "Crear landing HazTuWeb"
+git commit -m "Crear landing LandingConvierte"
 git branch -M main
-git remote add origin https://github.com/TU-USUARIO/nexo-web.git
+git remote add origin https://github.com/TU-USUARIO/landingconvierte.git
 git push -u origin main
 ```
 
@@ -30,10 +30,10 @@ Reemplazar en `index.html`:
 
 - `56900000000` por el WhatsApp real.
 - `$___` por el precio o texto comercial definitivo.
-- `HazTuWeb` por el nombre final de la marca.
-El dominio ya está configurado en la landing como `https://haztuweb.cl/`. Si cambia en el futuro, actualizar también `index.html`, `robots.txt` y `sitemap.xml`.
+- `LandingConvierte` por el nombre final de la marca.
+El dominio ya está configurado en la landing como `https://landingconvierte.cl/`. Si cambia en el futuro, actualizar también `index.html`, `robots.txt` y `sitemap.xml`.
 
-Los archivos `robots.txt` y `sitemap.xml` ya están creados con la URL `https://haztuweb.cl/`.
+Los archivos `robots.txt` y `sitemap.xml` ya están creados con la URL `https://landingconvierte.cl/`.
 
 ## Formulario de contacto sin backend
 

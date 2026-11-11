@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Creamos páginas web modernas, rápidas y orientadas a conseguir clientes para negocios y profesionales en Chile.">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0b0f16">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_CL">
+  <meta property="og:title" content="Nexo Web — Páginas web que venden">
+  <meta property="og:description" content="Diseñamos páginas web rápidas, claras y profesionales para que tu negocio consiga más contactos.">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Nexo Web — Páginas web que venden">
+  <meta name="twitter:description" content="Diseñamos páginas web rápidas, claras y profesionales para que tu negocio consiga más contactos.">
+  <!-- Cuando tengas el dominio, agrega aquí: <link rel="canonical" href="https://TU-DOMINIO.cl/"> -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "Nexo Web",
+    "description": "Diseño y desarrollo de páginas web para negocios y profesionales.",
+    "areaServed": "CL",
+    "serviceType": ["Diseño de páginas web", "Landing pages", "Optimización web"]
+  }
+  </script>
+  <title>Nexo Web — Tu negocio, mejor en internet</title>
+  <style>
+    :root {
+      --ink: #f2f5fb;
+      --muted: #9ba8ba;
+      --line: #293346;
+      --paper: #0b0f16;
+      --blue: #7c83ff;
+      --blue-dark: #6269e8;
+      --mint: #173b35;
+      --lime: #b8f36c;
+      --radius: 24px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; color: var(--ink); background: var(--paper); font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif; }
+    a { color: inherit; text-decoration: none; }
+    .wrap { width: min(1120px, calc(100% - 40px)); margin: auto; }
+    header { position: sticky; top: 0; z-index: 100; padding: 14px 0; background: rgba(11,15,22,.82); border-bottom: 1px solid rgba(41,51,70,.75); backdrop-filter: blur(18px); }
+    nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -.04em; font-size: 1.15rem; }
+    .mark { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 11px; color: white; background: var(--blue); font-weight: 900; }
+    .links { display: flex; gap: 26px; color: var(--muted); font-size: .93rem; }
+    .links a { position: relative; padding: 8px 0; transition: color 180ms ease; }
+    .links a::after { content: ''; position: absolute; left: 0; right: 100%; bottom: 0; height: 2px; border-radius: 9px; background: var(--lime); transition: right 220ms cubic-bezier(.16,1,.3,1); }
+    .links a:hover, .links a[aria-current="page"] { color: var(--ink); }
+    .links a[aria-current="page"]::after { right: 0; }
+    .skip-link { position: absolute; left: 16px; top: -100px; z-index: 200; padding: 10px 14px; border-radius: 8px; color: #0b0f16; background: var(--lime); font-weight: 800; }
+    .skip-link:focus { top: 12px; }
+    .floating-cta { position: fixed; right: 22px; bottom: 22px; z-index: 90; opacity: 0; transform: translateY(12px); pointer-events: none; transition: opacity 220ms ease, transform 220ms cubic-bezier(.16,1,.3,1); }
+    .floating-cta.is-visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .floating-cta .button { background: var(--lime); color: #0b0f16; box-shadow: 0 14px 34px rgba(0,0,0,.35); }
+    .floating-cta .button:hover { transform: translateY(-3px); }
+    .button { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; padding: 13px 19px; font-weight: 750; font-size: .92rem; transition: .2s ease; }
+    .button.primary { color: white; background: var(--blue); box-shadow: 0 12px 28px rgba(56,87,255,.2); }
+    .button.primary:hover { background: var(--blue-dark); transform: translateY(-2px); }
+    .button.ghost { border: 1px solid var(--line); background: #121925; }
+    .button.ghost:hover { border-color: var(--blue); color: var(--blue); }
+    .hero { padding: 86px 0 80px; }
+    .hero-grid { display: grid; grid-template-columns: 1.06fr .94fr; align-items: center; gap: 70px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 7px 11px; border-radius: 999px; background: var(--mint); color: #8ae0b9; font-weight: 800; font-size: .76rem; text-transform: uppercase; letter-spacing: .08em; }
+    h1 { max-width: 650px; margin: 18px 0; font-size: clamp(3rem, 7vw, 5.4rem); line-height: .96; letter-spacing: -.075em; }
+    .hero p { max-width: 535px; color: var(--muted); font-size: 1.15rem; line-height: 1.65; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+    .proof { display: flex; align-items: center; gap: 12px; margin-top: 25px; color: var(--muted); font-size: .86rem; }
+    .avatars { display: flex; }
+    .avatar { width: 29px; height: 29px; margin-right: -8px; display: grid; place-items: center; border: 2px solid var(--paper); border-radius: 50%; color: white; font-weight: 800; font-size: .66rem; }
+    .avatar:nth-child(1) { background: #f18b69; } .avatar:nth-child(2) { background: #8266d8; } .avatar:nth-child(3) { background: #35a77a; }
+    .mockup { position: relative; min-height: 440px; display: grid; place-items: center; }
+    .blob { position: absolute; inset: 35px 0 0 25px; border-radius: 42% 58% 48% 52% / 48% 44% 56% 52%; background: var(--lime); transform: rotate(-7deg); opacity: .88; }
+    .browser { position: relative; width: min(100%, 440px); padding: 13px; border: 1px solid rgba(255,255,255,.12); border-radius: 20px; background: #151c28; box-shadow: 0 28px 70px rgba(0,0,0,.42); transform: rotate(3deg); }
+    .dots { display: flex; gap: 5px; padding: 3px 4px 11px; } .dot { width: 7px; height: 7px; border-radius: 50%; background: #566176; }
+    .screen { min-height: 335px; overflow: hidden; border-radius: 12px; background: #101722; }
+    .screen-top { padding: 30px 25px 22px; background: #192238; color: white; } .screen-top small { color: #9fa9c1; } .screen-top h3 { margin: 20px 0 8px; font-size: 1.55rem; letter-spacing: -.06em; }
+    .screen-card { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; } .mini { height: 90px; border-radius: 12px; background: #192232; } .mini:first-child { background: #303b78; }
+    .lead-section { padding-top: 20px; }
+    .lead-panel { display: grid; grid-template-columns: .8fr 1.2fr; gap: 42px; align-items: start; padding: 34px; border: 1px solid #293346; border-radius: 28px; background: linear-gradient(135deg, #151c2b, #101722); }
+    .lead-panel h2 { margin: 12px 0; font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -.06em; }
+    .lead-panel p { color: var(--muted); line-height: 1.6; }
+    .lead-points { display: grid; gap: 12px; margin-top: 26px; color: #c5cede; font-size: .92rem; }
+    .lead-points span { display: flex; gap: 10px; align-items: center; }
+    .lead-points b { color: var(--lime); }
+    .lead-form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .field { display: grid; gap: 7px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { color: #dfe5f1; font-size: .82rem; font-weight: 750; }
+    .field input, .field select, .field textarea { width: 100%; border: 1px solid #303c50; border-radius: 12px; padding: 13px 14px; color: var(--ink); background: #0b111b; font: inherit; outline: none; transition: border-color 180ms ease, box-shadow 180ms ease; }
+    .field textarea { min-height: 116px; resize: vertical; }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(124,131,255,.18); }
+    .form-note { grid-column: 1 / -1; margin: 0; color: #8794a8; font-size: .78rem; line-height: 1.5; }
+    @media (max-width: 800px) { .lead-panel { grid-template-columns: 1fr; padding: 24px; } .lead-form { grid-template-columns: 1fr; } .field.full, .form-note { grid-column: auto; } }
+    section { padding: 92px 0; } .section-head { max-width: 570px; margin-bottom: 38px; } .section-head h2 { margin: 10px 0; font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -.06em; } .section-head p { color: var(--muted); line-height: 1.6; }
+    .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .card { padding: 26px; border: 1px solid var(--line); border-radius: var(--radius); background: #131b28; } .icon { width: 40px; height: 40px; display: grid; place-items: center; margin-bottom: 22px; border-radius: 12px; background: #1c2442; color: #aeb4ff; font-size: 1.2rem; } .card h3 { margin: 0 0 10px; font-size: 1.14rem; } .card p { margin: 0; color: var(--muted); line-height: 1.6; font-size: .94rem; }
+    .offer { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: center; padding: 42px; border-radius: 30px; background: #151c2b; color: white; } .offer h2 { margin: 0 0 13px; font-size: clamp(2rem, 4vw, 3.25rem); letter-spacing: -.06em; } .offer p { color: #b8c0d3; line-height: 1.6; } .offer .button { background: var(--lime); color: #172033; } .price { padding: 28px; border: 1px solid rgba(255,255,255,.15); border-radius: 21px; background: rgba(255,255,255,.07); } .price strong { display: block; font-size: 2rem; } .price span { color: #b8c0d3; font-size: .9rem; }
+    footer { padding: 28px 0 40px; color: var(--muted); font-size: .85rem; } .footer-row { display: flex; justify-content: space-between; gap: 20px; border-top: 1px solid var(--line); padding-top: 25px; }
+
+    /* Motion system: one authored hero entrance, then restrained feedback/reveals. */
+    @keyframes hero-copy-in { from { opacity: 0; transform: translateY(24px); filter: blur(8px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+    @keyframes hero-browser-in { from { opacity: 0; transform: translate3d(28px, 24px, 0) rotate(3deg) scale(.96); } to { opacity: 1; transform: translate3d(0, 0, 0) rotate(3deg) scale(1); } }
+    @keyframes blob-drift { 0%, 100% { transform: rotate(-7deg) translate3d(0, 0, 0); } 50% { transform: rotate(-4deg) translate3d(-8px, 10px, 0); } }
+    @keyframes pulse-dot { 0%, 100% { box-shadow: 0 0 0 0 rgba(20,112,70,.25); } 50% { box-shadow: 0 0 0 6px rgba(20,112,70,0); } }
+    .hero-copy { animation: hero-copy-in 700ms cubic-bezier(.16,1,.3,1) both; }
+    .hero-copy .actions { animation: hero-copy-in 600ms 130ms cubic-bezier(.16,1,.3,1) both; }
+    .hero-copy .proof { animation: hero-copy-in 600ms 220ms cubic-bezier(.16,1,.3,1) both; }
+    .mockup .blob { animation: blob-drift 8s ease-in-out infinite; }
+    .mockup .browser { animation: hero-browser-in 800ms 120ms cubic-bezier(.16,1,.3,1) both; }
+    .eyebrow { transition: transform 180ms ease, box-shadow 180ms ease; }
+    .eyebrow:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(20,112,70,.12); }
+    .eyebrow:first-letter { animation: pulse-dot 2s ease-out infinite; }
+    .button:focus-visible, a:focus-visible { outline: 3px solid rgba(56,87,255,.35); outline-offset: 4px; }
+    .card { transition: transform 220ms cubic-bezier(.16,1,.3,1), border-color 220ms ease, box-shadow 220ms ease; }
+    .card:hover { transform: translateY(-6px); border-color: #cfd6ff; box-shadow: 0 18px 38px rgba(39,53,93,.10); }
+    .screen-top span { transition: transform 180ms ease, box-shadow 180ms ease; }
+    .screen-top span:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 8px 18px rgba(200,241,105,.18); }
+    .reveal { opacity: 1; transform: translateY(0); }
+    .motion-ready .reveal { opacity: 0; transform: translateY(18px); transition: opacity 600ms cubic-bezier(.16,1,.3,1), transform 600ms cubic-bezier(.16,1,.3,1); }
+    .motion-ready .reveal.is-visible { opacity: 1; transform: translateY(0); }
+    .grid3 .reveal:nth-child(2) { transition-delay: 70ms; }
+    .grid3 .reveal:nth-child(3) { transition-delay: 140ms; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: 1ms !important; }
+      .motion-ready .reveal, .motion-ready .reveal.is-visible { opacity: 1; transform: none; }
+    }
+    @media (max-width: 800px) { .links { display: none; } .hero { padding-top: 55px; } .hero-grid, .offer { grid-template-columns: 1fr; gap: 38px; } .mockup { min-height: 360px; } .grid3 { grid-template-columns: 1fr; } section { padding: 65px 0; } h1 { font-size: clamp(3rem, 16vw, 4.5rem); } }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+  <header><div class="wrap"><nav aria-label="Navegación principal"><a class="brand" href="#inicio" aria-label="Nexo Web, inicio"><span class="mark">N</span>Nexo Web</a><div class="links"><a href="#servicios" data-section-link="servicios">Servicios</a><a href="#proceso" data-section-link="proceso">Proceso</a><a href="#formulario" data-section-link="formulario">Contacto</a></div><a class="button primary" href="#formulario">Hablemos →</a></nav></div></header>
+  <main id="contenido">
+    <section id="inicio" class="hero"><div class="wrap hero-grid"><div class="hero-copy"><span class="eyebrow">● Cupos abiertos este mes</span><h1>Tu negocio merece una web que venda.</h1><p>Diseñamos páginas rápidas, claras y profesionales para que tus clientes entiendan lo que haces y se animen a contactarte.</p><div class="actions"><a class="button primary" href="#formulario">Quiero mi página →</a><a class="button ghost" href="#servicios">Ver servicios</a></div><div class="proof"><div class="avatars"><span class="avatar">AM</span><span class="avatar">JS</span><span class="avatar">CR</span></div><span>Proyectos simples, sin vueltas.</span></div></div><div class="mockup"><div class="blob"></div><div class="browser"><div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div class="screen"><div class="screen-top"><small>tuempresa.cl</small><h3>Una primera impresión que trabaja por ti.</h3><span style="display:inline-block;padding:8px 12px;border-radius:999px;background:#c8f169;color:#172033;font-size:.7rem;font-weight:800">CONVERSEMOS →</span></div><div class="screen-card"><div class="mini"></div><div class="mini"></div></div></div></div></div></div></section>
+    <section id="formulario" class="lead-section"><div class="wrap"><div class="lead-panel reveal"><div><span class="eyebrow">Cuéntame tu idea</span><h2>Recibe una propuesta para tu página.</h2><p>Completa el formulario y te responderemos con una idea inicial, alcance y próximos pasos.</p><div class="lead-points"><span><b>✓</b> Respuesta clara y sin compromiso</span><span><b>✓</b> Diseños rápidos y adaptados a móvil</span><span><b>✓</b> Publicación con dominio propio</span></div></div><form class="lead-form" action="https://api.web3forms.com/submit" method="POST"><input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE"><input type="hidden" name="subject" value="Nueva consulta desde Nexo Web"><input type="hidden" name="from_name" value="Nexo Web"><input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none"><div class="field"><label for="name">Nombre</label><input id="name" name="name" type="text" autocomplete="name" required></div><div class="field"><label for="email">Correo</label><input id="email" name="email" type="email" autocomplete="email" required></div><div class="field"><label for="company">Negocio o marca</label><input id="company" name="company" type="text" autocomplete="organization"></div><div class="field"><label for="service">¿Qué necesitas?</label><select id="service" name="service"><option>Landing page</option><option>Página para servicios</option><option>Rediseño de página existente</option><option>Otro</option></select></div><div class="field full"><label for="message">Cuéntanos brevemente</label><textarea id="message" name="message" required placeholder="¿Qué hace tu negocio y qué te gustaría lograr?"></textarea></div><p class="form-note">Usaremos estos datos únicamente para responder tu consulta. Reemplaza <code>YOUR_ACCESS_KEY_HERE</code> por la clave de Web3Forms antes de publicar.</p><button class="button primary" type="submit">Solicitar propuesta →</button></form></div></div></section>
+    <section id="servicios"><div class="wrap"><div class="section-head reveal"><span class="eyebrow">Lo que hacemos</span><h2>Todo lo necesario para salir bien a internet.</h2><p>Una solución enfocada en tu negocio, no en llenarte de funciones que no necesitas.</p></div><div class="grid3"><article class="card reveal"><div class="icon">✦</div><h3>Landing page</h3><p>Una página de una sola vista, enfocada en presentar tu oferta y generar contactos.</p></article><article class="card reveal"><div class="icon">↗</div><h3>Web para servicios</h3><p>Organiza tus servicios, equipo, portafolio y formas de contacto en un sitio profesional.</p></article><article class="card reveal"><div class="icon">⚡</div><h3>Optimización</h3><p>Diseño responsive, carga rápida y una base lista para crecer contigo.</p></article></div></div></section>
+    <section id="proceso"><div class="wrap"><div class="section-head reveal"><span class="eyebrow">Cómo trabajamos</span><h2>De la idea a tu web en pocos pasos.</h2></div><div class="grid3"><article class="card reveal"><div class="icon">01</div><h3>Conversamos</h3><p>Entendemos tu negocio, tus clientes y qué quieres conseguir.</p></article><article class="card reveal"><div class="icon">02</div><h3>Diseñamos</h3><p>Armamos una propuesta visual y ajustamos los detalles contigo.</p></article><article class="card reveal"><div class="icon">03</div><h3>Publicamos</h3><p>Dejamos tu página online, rápida y lista para compartir.</p></article></div></div></section>
+    <section id="contacto"><div class="wrap"><div class="offer reveal"><div><span class="eyebrow">Primer paso</span><h2>Cuéntame qué quieres construir.</h2><p>Te respondo con una propuesta simple, alcance claro y sin compromiso.</p><a class="button" href="https://wa.me/56900000000?text=Hola%2C%20quiero%20cotizar%20una%20p%C3%A1gina%20web">Escribir por WhatsApp →</a></div><div class="price"><span>Landing inicial</span><strong>Desde $___</strong><span>El precio final depende del contenido y las funciones que necesites.</span></div></div></div></section>
+  </main>
+  <footer><div class="wrap footer-row"><span>© 2026 Nexo Web</span><span>Hecho para negocios que quieren crecer.</span></div></footer>
+  <div class="floating-cta" aria-label="Contacto rápido"><a class="button" href="https://wa.me/56900000000?text=Hola%2C%20quiero%20cotizar%20una%20p%C3%A1gina%20web">Cotiza tu web →</a></div>
+  <script>
+    (() => {
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const reveals = [...document.querySelectorAll('.reveal')];
+      const floatingCta = document.querySelector('.floating-cta');
+      const sectionLinks = [...document.querySelectorAll('[data-section-link]')];
+      const sections = sectionLinks.map(link => document.getElementById(link.dataset.sectionLink));
+      if (!reduceMotion && 'IntersectionObserver' in window) {
+        document.documentElement.classList.add('motion-ready');
+        const revealObserver = new IntersectionObserver((entries, io) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) { entry.target.classList.add('is-visible'); io.unobserve(entry.target); }
+          });
+        }, { threshold: 0.14, rootMargin: '0px 0px -8% 0px' });
+        reveals.forEach(element => revealObserver.observe(element));
+        const updateActiveSection = () => {
+          const marker = 130;
+          let current = sections[0];
+          sections.forEach(section => {
+            if (section.getBoundingClientRect().top <= marker) current = section;
+          });
+          sectionLinks.forEach(link => {
+            if (link.dataset.sectionLink === current.id) link.setAttribute('aria-current', 'page');
+            else link.removeAttribute('aria-current');
+          });
+        };
+        updateActiveSection();
+        window.addEventListener('scroll', updateActiveSection, { passive: true });
+      } else {
+        sectionLinks.forEach(link => link.removeAttribute('aria-current'));
+      }
+      const updateCta = () => floatingCta.classList.toggle('is-visible', window.scrollY > 460);
+      updateCta();
+      window.addEventListener('scroll', updateCta, { passive: true });
+    })();
+  </script>
+</body>
+</html>

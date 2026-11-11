@@ -2,12 +2,12 @@
 
 ## Opción recomendada: Cloudflare Pages + GitHub
 
-1. Crear un repositorio público o privado en GitHub, por ejemplo `nexo-web`.
+1. Crear un repositorio público o privado en GitHub, por ejemplo `landingconvierte`.
 2. Desde esta carpeta ejecutar:
 
 ```bash
 git init
-git add index.html README_DEPLOY.md
+git add .
 git commit -m "Crear landing LandingConvierte"
 git branch -M main
 git remote add origin https://github.com/TU-USUARIO/landingconvierte.git
@@ -15,7 +15,7 @@ git push -u origin main
 ```
 
 3. En Cloudflare abrir **Workers & Pages** → **Create application** → **Pages** → **Connect to Git**.
-4. Elegir GitHub y el repositorio `nexo-web`.
+4. Elegir GitHub y el repositorio `landingconvierte`.
 5. Para esta landing usar:
    - Framework preset: `None`
    - Build command: vacío
@@ -24,16 +24,17 @@ git push -u origin main
 7. En **Custom domains**, agregar el dominio comprado en NIC Chile.
 8. En NIC Chile configurar los nameservers que entregue Cloudflare.
 
-## Antes de publicar
+## Estructura del sitio
 
-Reemplazar en `index.html`:
+- `index.html` y `landing-page.html`: las dos páginas. Cloudflare Pages sirve `landing-page.html` como `/landing-page`.
+- `styles.css` y `main.js`: estilos y comportamiento compartidos (menú móvil, demo del hero, envío del formulario).
+- `fonts/archivo-latin.woff2`: tipografía Archivo (licencia OFL), servida desde el propio dominio.
+- `404.html`: página de error. `_headers`: cabeceras de seguridad y caché para Cloudflare Pages.
+- `robots.txt`, `sitemap.xml`, `site.webmanifest`, `favicon.svg`, `apple-touch-icon.png`, `logo.png`, `og-image.png`.
 
-- `56900000000` por el WhatsApp real.
-- `$___` por el precio o texto comercial definitivo.
-- `LandingConvierte` por el nombre final de la marca.
-El dominio ya está configurado en la landing como `https://landingconvierte.cl/`. Si cambia en el futuro, actualizar también `index.html`, `robots.txt` y `sitemap.xml`.
+El dominio configurado es `https://landingconvierte.cl/`. Si cambia, actualizar `index.html`, `landing-page.html`, `robots.txt` y `sitemap.xml`.
 
-Los archivos `robots.txt` y `sitemap.xml` ya están creados con la URL `https://landingconvierte.cl/`.
+Para probar en local hace falta un servidor (las rutas son absolutas): `python3 -m http.server` y abrir `http://localhost:8000/`.
 
 ## Formulario de contacto sin backend
 
@@ -41,7 +42,7 @@ La landing usa Web3Forms, compatible con GitHub Pages y Cloudflare Pages:
 
 1. Crear una cuenta gratuita en https://web3forms.com/.
 2. Generar un Access Key para el correo que recibirá las consultas.
-3. Reemplazar `YOUR_ACCESS_KEY_HERE` en `index.html` por esa clave.
+3. Poner esa clave en el campo oculto `access_key` del formulario en `index.html`.
 4. Publicar nuevamente.
 
 El plan gratuito publicado por Web3Forms indica 250 envíos mensuales. No pongas una contraseña ni una API privada en el HTML; el Access Key de Web3Forms está diseñado para usarse en formularios frontend.

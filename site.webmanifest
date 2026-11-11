@@ -1,0 +1,13 @@
+{
+  "name": "LandingConvierte",
+  "short_name": "LandingConvierte",
+  "lang": "es-CL",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#1e3fc2",
+  "theme_color": "#1e3fc2",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "/logo.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

@@ -76,12 +76,12 @@
     .avatar { width: 29px; height: 29px; margin-right: -8px; display: grid; place-items: center; border: 2px solid var(--paper); border-radius: 50%; color: white; font-weight: 800; font-size: .66rem; }
     .avatar:nth-child(1) { background: #f18b69; } .avatar:nth-child(2) { background: #8266d8; } .avatar:nth-child(3) { background: #35a77a; }
     .mockup { position: relative; min-height: 440px; display: grid; place-items: center; }
-    .blob { position: absolute; inset: 35px 0 0 25px; border-radius: 42% 58% 48% 52% / 48% 44% 56% 52%; background: var(--lime); transform: rotate(-7deg); opacity: .88; }
-    .browser { position: relative; width: min(100%, 440px); padding: 13px; border: 1px solid rgba(255,255,255,.12); border-radius: 20px; background: #151c28; box-shadow: 0 28px 70px rgba(0,0,0,.42); transform: rotate(3deg); }
+    .blob { position: absolute; inset: 35px 0 0 25px; border-radius: 42% 58% 48% 52% / 48% 44% 56% 52%; background: var(--lime); transform: rotate(-7deg); translate: var(--blob-x, 0px) var(--blob-y, 0px); transition: translate 350ms cubic-bezier(.16,1,.3,1); opacity: .88; }
+    .browser { position: relative; width: min(100%, 440px); padding: 13px; border: 1px solid rgba(255,255,255,.12); border-radius: 20px; background: #151c28; box-shadow: 0 28px 70px rgba(0,0,0,.42); transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) rotate(3deg); transform-style: preserve-3d; transition: transform 180ms cubic-bezier(.16,1,.3,1), box-shadow 240ms ease; will-change: transform; }
     .dots { display: flex; gap: 5px; padding: 3px 4px 11px; } .dot { width: 7px; height: 7px; border-radius: 50%; background: #566176; }
     .screen { min-height: 335px; overflow: hidden; border-radius: 12px; background: #101722; }
     .screen-top { padding: 30px 25px 22px; background: #192238; color: white; } .screen-top small { color: #9fa9c1; } .screen-top h3 { margin: 20px 0 8px; font-size: 1.55rem; letter-spacing: -.06em; }
-    .screen-card { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; } .mini { height: 90px; border-radius: 12px; background: #192232; } .mini:first-child { background: #303b78; }
+    .screen-card { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; } .mini { height: 90px; border-radius: 12px; background: #192232; transition: transform 400ms cubic-bezier(.16,1,.3,1), background-color 250ms ease; } .mini:first-child { background: #303b78; }
     .lead-section { padding-top: 20px; }
     .lead-panel { display: grid; grid-template-columns: .8fr 1.2fr; gap: 42px; align-items: start; padding: 34px; border: 1px solid #293346; border-radius: 28px; background: linear-gradient(135deg, #151c2b, #101722); box-shadow: 0 24px 70px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.045); }
     .lead-panel h2 { margin: 12px 0; font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -.06em; text-shadow: 0 5px 22px rgba(0,0,0,.26); }
@@ -104,24 +104,31 @@
     .offer { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: center; padding: 42px; border-radius: 30px; background: #151c2b; color: white; box-shadow: 0 28px 80px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.05); } .offer h2 { margin: 0 0 13px; font-size: clamp(2rem, 4vw, 3.25rem); letter-spacing: -.06em; } .offer p { color: #b8c0d3; line-height: 1.6; } .offer .button { background: var(--lime); color: #172033; } .price { padding: 28px; border: 1px solid rgba(255,255,255,.15); border-radius: 21px; background: rgba(255,255,255,.07); box-shadow: 0 18px 40px rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.07); } .price strong { display: block; font-size: 2rem; text-shadow: 0 4px 18px rgba(0,0,0,.3); } .price span { color: #b8c0d3; font-size: .9rem; }
     footer { padding: 28px 0 40px; color: var(--muted); font-size: .85rem; } .footer-row { display: flex; justify-content: space-between; gap: 20px; border-top: 1px solid var(--line); padding-top: 25px; }
 
-    /* Motion system: one authored hero entrance, then restrained feedback/reveals. */
-    @keyframes hero-copy-in { from { opacity: 0; transform: translateY(24px); filter: blur(8px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
-    @keyframes hero-browser-in { from { opacity: 0; transform: translate3d(28px, 24px, 0) rotate(3deg) scale(.96); } to { opacity: 1; transform: translate3d(0, 0, 0) rotate(3deg) scale(1); } }
-    @keyframes blob-drift { 0%, 100% { transform: rotate(-7deg) translate3d(0, 0, 0); } 50% { transform: rotate(-4deg) translate3d(-8px, 10px, 0); } }
-    @keyframes pulse-dot { 0%, 100% { box-shadow: 0 0 0 0 rgba(20,112,70,.25); } 50% { box-shadow: 0 0 0 6px rgba(20,112,70,0); } }
-    .hero-copy { animation: hero-copy-in 700ms cubic-bezier(.16,1,.3,1) both; }
-    .hero-copy .actions { animation: hero-copy-in 600ms 130ms cubic-bezier(.16,1,.3,1) both; }
-    .hero-copy .proof { animation: hero-copy-in 600ms 220ms cubic-bezier(.16,1,.3,1) both; }
-    .mockup .blob { animation: blob-drift 8s ease-in-out infinite; }
-    .mockup .browser { animation: hero-browser-in 800ms 120ms cubic-bezier(.16,1,.3,1) both; }
+    /* Hero motion: staggered entrance, gentle float, and pointer-driven depth. */
+    @keyframes blob-drift { 0%, 100% { transform: rotate(-7deg); } 50% { transform: rotate(-3deg); } }
+    @keyframes browser-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -9px; } }
+    @keyframes pulse-dot { 0%, 100% { box-shadow: 0 0 0 0 rgba(184,243,108,.45); } 55% { box-shadow: 0 0 0 7px rgba(184,243,108,0); } }
+    .availability-dot { width: 7px; height: 7px; flex: 0 0 7px; border-radius: 50%; background: var(--lime); animation: pulse-dot 2.4s ease-out infinite; }
+    .hero-copy > :nth-child(1) { --hero-delay: 0ms; }
+    .hero-copy > :nth-child(2) { --hero-delay: 90ms; }
+    .hero-copy > :nth-child(3) { --hero-delay: 170ms; }
+    .hero-copy > :nth-child(4) { --hero-delay: 250ms; }
+    .hero-copy > :nth-child(5) { --hero-delay: 330ms; }
+    .hero-motion .hero-copy > * { opacity: 0; transform: translateY(22px); filter: blur(6px); }
+    .hero-motion.hero-ready .hero-copy > * { opacity: 1; transform: translateY(0); filter: blur(0); transition: opacity 680ms cubic-bezier(.16,1,.3,1) var(--hero-delay, 0ms), transform 680ms cubic-bezier(.16,1,.3,1) var(--hero-delay, 0ms), filter 680ms ease var(--hero-delay, 0ms); }
+    .hero-motion .browser { opacity: 0; translate: 28px 18px; scale: .96; }
+    .hero-motion.hero-ready .browser { opacity: 1; translate: 0 0; scale: 1; transition: opacity 850ms cubic-bezier(.16,1,.3,1) 140ms, translate 850ms cubic-bezier(.16,1,.3,1) 140ms, scale 850ms cubic-bezier(.16,1,.3,1) 140ms, transform 180ms cubic-bezier(.16,1,.3,1), box-shadow 240ms ease; animation: browser-float 5.8s ease-in-out 1s infinite; }
+    .mockup .blob { animation: blob-drift 7s ease-in-out infinite; }
     .eyebrow { transition: transform 180ms ease, box-shadow 180ms ease; }
     .eyebrow:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(20,112,70,.12); }
-    .eyebrow:first-letter { animation: pulse-dot 2s ease-out infinite; }
     .button:focus-visible, a:focus-visible { outline: 3px solid rgba(56,87,255,.35); outline-offset: 4px; }
     .card { transition: transform 220ms cubic-bezier(.16,1,.3,1), border-color 220ms ease, box-shadow 220ms ease; }
     .card:hover { transform: translateY(-6px); border-color: #cfd6ff; box-shadow: 0 18px 38px rgba(39,53,93,.10); }
     .screen-top span { transition: transform 180ms ease, box-shadow 180ms ease; }
     .screen-top span:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 8px 18px rgba(200,241,105,.18); }
+    .browser:hover { box-shadow: 0 36px 90px rgba(0,0,0,.52); }
+    .browser:hover .mini:first-child { transform: translateY(-5px); }
+    .browser:hover .mini:last-child { transform: translateY(4px); }
     .reveal { opacity: 1; transform: translateY(0); }
     .motion-ready .reveal { opacity: 0; transform: translateY(18px); transition: opacity 600ms cubic-bezier(.16,1,.3,1), transform 600ms cubic-bezier(.16,1,.3,1); }
     .motion-ready .reveal.is-visible { opacity: 1; transform: translateY(0); }
@@ -138,7 +145,7 @@
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
   <header><div class="wrap"><nav aria-label="Navegación principal"><a class="brand" href="#inicio" aria-label="LandingConvierte, inicio"><span class="mark">N</span>LandingConvierte</a><div class="links"><a href="#servicios" data-section-link="servicios">Servicios</a><a href="#proceso" data-section-link="proceso">Proceso</a><a href="#formulario" data-section-link="formulario">Contacto</a></div><a class="button primary" href="#formulario">Hablemos →</a></nav></div></header>
   <main id="contenido">
-    <section id="inicio" class="hero"><div class="wrap hero-grid"><div class="hero-copy"><span class="eyebrow">● Cupos abiertos este mes</span><h1>Tu negocio merece una web que venda.</h1><p>Diseñamos páginas rápidas, claras y profesionales para que tus clientes entiendan lo que haces y se animen a contactarte.</p><div class="actions"><a class="button primary" href="#formulario">Quiero mi página →</a><a class="button ghost" href="#servicios">Ver servicios</a></div><div class="proof"><div class="avatars"><span class="avatar">AM</span><span class="avatar">JS</span><span class="avatar">CR</span></div><span>Proyectos simples, sin vueltas.</span></div></div><div class="mockup"><div class="blob"></div><div class="browser"><div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div class="screen"><div class="screen-top"><small>landingconvierte.cl</small><h3>Una primera impresión que trabaja por ti.</h3><span style="display:inline-block;padding:8px 12px;border-radius:999px;background:#c8f169;color:#172033;font-size:.7rem;font-weight:800">CONVERSEMOS →</span></div><div class="screen-card"><div class="mini"></div><div class="mini"></div></div></div></div></div></div></section>
+    <section id="inicio" class="hero"><div class="wrap hero-grid"><div class="hero-copy"><span class="eyebrow"><span class="availability-dot" aria-hidden="true"></span>Cupos abiertos este mes</span><h1>Tu negocio merece una web que venda.</h1><p>Diseñamos páginas rápidas, claras y profesionales para que tus clientes entiendan lo que haces y se animen a contactarte.</p><div class="actions"><a class="button primary" href="#formulario">Quiero mi página →</a><a class="button ghost" href="#servicios">Ver servicios</a></div><div class="proof"><div class="avatars"><span class="avatar">AM</span><span class="avatar">JS</span><span class="avatar">CR</span></div><span>Proyectos simples, sin vueltas.</span></div></div><div class="mockup"><div class="blob"></div><div class="browser"><div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div class="screen"><div class="screen-top"><small>landingconvierte.cl</small><h3>Una primera impresión que trabaja por ti.</h3><span style="display:inline-block;padding:8px 12px;border-radius:999px;background:#c8f169;color:#172033;font-size:.7rem;font-weight:800">CONVERSEMOS →</span></div><div class="screen-card"><div class="mini"></div><div class="mini"></div></div></div></div></div></div></section>
     <section id="formulario" class="lead-section"><div class="wrap"><div class="lead-panel reveal"><div><span class="eyebrow">Cuéntame tu idea</span><h2>Recibe una propuesta para tu página.</h2><p>Completa el formulario y te responderemos con una idea inicial, alcance y próximos pasos.</p><div class="lead-points"><span><b>✓</b> Respuesta clara y sin compromiso</span><span><b>✓</b> Diseños rápidos y adaptados a móvil</span><span><b>✓</b> Publicación con dominio propio</span></div></div><form class="lead-form" action="https://api.web3forms.com/submit" method="POST"><input type="hidden" name="access_key" value="583e9e8a-e418-40a8-82af-af64e8715366"><input type="hidden" name="subject" value="Nueva consulta desde LandingConvierte"><input type="hidden" name="from_name" value="LandingConvierte"><input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none"><div class="field"><label for="name">Nombre</label><input id="name" name="name" type="text" autocomplete="name" required></div><div class="field"><label for="email">Correo</label><input id="email" name="email" type="email" autocomplete="email" required></div><div class="field"><label for="company">Negocio o marca</label><input id="company" name="company" type="text" autocomplete="organization"></div><div class="field"><label for="service">¿Qué necesitas?</label><select id="service" name="service"><option>Landing page</option><option>Página para servicios</option><option>Rediseño de página existente</option><option>Otro</option></select></div><div class="field full"><label for="message">Cuéntanos brevemente</label><textarea id="message" name="message" required placeholder="¿Qué hace tu negocio y qué te gustaría lograr?"></textarea></div><p class="form-note">Usaremos estos datos únicamente para responder tu consulta.</p><button class="button primary" type="submit">Solicitar propuesta →</button></form></div></div></section>
     <section id="servicios"><div class="wrap"><div class="section-head reveal"><span class="eyebrow">Lo que hacemos</span><h2>Todo lo necesario para salir bien a internet.</h2><p>Una solución enfocada en tu negocio, no en llenarte de funciones que no necesitas.</p></div><div class="grid3"><article class="card reveal"><div class="icon">✦</div><h3>Landing page</h3><p>Una página de una sola vista, enfocada en presentar tu oferta y generar contactos.</p></article><article class="card reveal"><div class="icon">↗</div><h3>Web para servicios</h3><p>Organiza tus servicios, equipo, portafolio y formas de contacto en un sitio profesional.</p></article><article class="card reveal"><div class="icon">⚡</div><h3>Optimización</h3><p>Diseño responsive, carga rápida y una base lista para crecer contigo.</p></article></div></div></section>
     <section id="proceso"><div class="wrap"><div class="section-head reveal"><span class="eyebrow">Cómo trabajamos</span><h2>De la idea a tu web en pocos pasos.</h2></div><div class="grid3"><article class="card reveal"><div class="icon">01</div><h3>Conversamos</h3><p>Entendemos tu negocio, tus clientes y qué quieres conseguir.</p></article><article class="card reveal"><div class="icon">02</div><h3>Diseñamos</h3><p>Armamos una propuesta visual y ajustamos los detalles contigo.</p></article><article class="card reveal"><div class="icon">03</div><h3>Publicamos</h3><p>Dejamos tu página online, rápida y lista para compartir.</p></article></div></div></section>
@@ -149,23 +156,64 @@
   <script>
     (() => {
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const mockup = document.querySelector('.mockup');
+      const browser = document.querySelector('.browser');
+      const blob = document.querySelector('.blob');
       const reveals = [...document.querySelectorAll('.reveal')];
       const floatingCta = document.querySelector('.floating-cta');
       const sectionLinks = [...document.querySelectorAll('[data-section-link]')];
       const sections = sectionLinks.map(link => document.getElementById(link.dataset.sectionLink));
-      if (!reduceMotion && 'IntersectionObserver' in window) {
-        document.documentElement.classList.add('motion-ready');
-        const revealObserver = new IntersectionObserver((entries, io) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) { entry.target.classList.add('is-visible'); io.unobserve(entry.target); }
+
+      if (!reduceMotion) {
+        document.documentElement.classList.add('hero-motion');
+        requestAnimationFrame(() => document.documentElement.classList.add('hero-ready'));
+        if ('IntersectionObserver' in window) {
+          document.documentElement.classList.add('motion-ready');
+          const revealObserver = new IntersectionObserver((entries, io) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) { entry.target.classList.add('is-visible'); io.unobserve(entry.target); }
+            });
+          }, { threshold: 0.14, rootMargin: '0px 0px -8% 0px' });
+          reveals.forEach(element => revealObserver.observe(element));
+        }
+
+        if (window.matchMedia('(hover: hover) and (pointer: fine)').matches && mockup && browser && blob) {
+          let frame = 0;
+          let tiltX = 0;
+          let tiltY = 0;
+          let driftX = 0;
+          let driftY = 0;
+          const paintTilt = () => {
+            browser.style.setProperty('--tilt-x', `${tiltX.toFixed(2)}deg`);
+            browser.style.setProperty('--tilt-y', `${tiltY.toFixed(2)}deg`);
+            blob.style.setProperty('--blob-x', `${driftX.toFixed(1)}px`);
+            blob.style.setProperty('--blob-y', `${driftY.toFixed(1)}px`);
+            frame = 0;
+          };
+          mockup.addEventListener('pointermove', event => {
+            const bounds = mockup.getBoundingClientRect();
+            const x = ((event.clientX - bounds.left) / bounds.width) * 2 - 1;
+            const y = ((event.clientY - bounds.top) / bounds.height) * 2 - 1;
+            tiltX = -y * 5.5;
+            tiltY = x * 7;
+            driftX = x * 9;
+            driftY = y * 7;
+            if (!frame) frame = requestAnimationFrame(paintTilt);
           });
-        }, { threshold: 0.14, rootMargin: '0px 0px -8% 0px' });
-        reveals.forEach(element => revealObserver.observe(element));
+          mockup.addEventListener('pointerleave', () => {
+            if (frame) cancelAnimationFrame(frame);
+            tiltX = tiltY = driftX = driftY = 0;
+            paintTilt();
+          });
+        }
+      }
+
+      if (!reduceMotion && 'IntersectionObserver' in window) {
         const updateActiveSection = () => {
           const marker = 130;
           let current = null;
           sections.forEach(section => {
-            if (section.getBoundingClientRect().top <= marker) current = section;
+            if (section && section.getBoundingClientRect().top <= marker) current = section;
           });
           sectionLinks.forEach(link => {
             if (current && link.dataset.sectionLink === current.id) link.setAttribute('aria-current', 'page');

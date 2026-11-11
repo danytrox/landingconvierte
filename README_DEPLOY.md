@@ -1,4 +1,4 @@
-# Publicar Nexo Web
+# Publicar HazTuWeb
 
 ## Opción recomendada: Cloudflare Pages + GitHub
 
@@ -8,7 +8,7 @@
 ```bash
 git init
 git add index.html README_DEPLOY.md
-git commit -m "Crear landing Nexo Web"
+git commit -m "Crear landing HazTuWeb"
 git branch -M main
 git remote add origin https://github.com/TU-USUARIO/nexo-web.git
 git push -u origin main
@@ -30,14 +30,10 @@ Reemplazar en `index.html`:
 
 - `56900000000` por el WhatsApp real.
 - `$___` por el precio o texto comercial definitivo.
-- `Nexo Web` por el nombre final de la marca.
-- El comentario de canonical SEO por el dominio real:
+- `HazTuWeb` por el nombre final de la marca.
+El dominio ya está configurado en la landing como `https://haztuweb.cl/`. Si cambia en el futuro, actualizar también `index.html`, `robots.txt` y `sitemap.xml`.
 
-```html
-<link rel="canonical" href="https://TU-DOMINIO.cl/">
-```
-
-Cuando el dominio esté definido, crear también `robots.txt` y `sitemap.xml` con la URL real. No se agregan antes para evitar publicar URLs ficticias.
+Los archivos `robots.txt` y `sitemap.xml` ya están creados con la URL `https://haztuweb.cl/`.
 
 ## Formulario de contacto sin backend
 

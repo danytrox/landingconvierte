@@ -89,6 +89,7 @@
     const status = form.querySelector('.form-status');
     const button = form.querySelector('button[type="submit"]');
     const label = button.textContent;
+    const SEND_TIMEOUT_MS = 15000;
     const say = (kind, text) => { status.className = `form-status ${kind}`; status.textContent = text; };
 
     form.addEventListener('submit', async event => {
@@ -97,15 +98,24 @@
       button.disabled = true;
       button.textContent = 'Enviando…';
       say('', '');
+      const kept = 'Lo que escribiste sigue en el formulario.';
+      const abort = new AbortController();
+      const timeout = setTimeout(() => abort.abort(), SEND_TIMEOUT_MS);
+      let response = null;
       try {
-        const response = await fetch(form.action, { method: 'POST', headers: { Accept: 'application/json' }, body: new FormData(form) });
+        response = await fetch(form.action, { method: 'POST', headers: { Accept: 'application/json' }, body: new FormData(form), signal: abort.signal });
         const result = await response.json().catch(() => ({}));
-        if (!response.ok || !result.success) throw new Error(result.message || 'send failed');
+        if (!response.ok || !result.success) throw new Error(result.message || `HTTP ${response.status}`);
         form.reset();
         say('is-ok', 'Propuesta pedida. Recibimos tu consulta y te responderemos al correo que indicaste.');
       } catch (error) {
-        say('is-error', 'No se pudo enviar la consulta. Revisa tu conexión y vuelve a intentarlo; lo que escribiste sigue en el formulario.');
+        console.error('Contact form send failed:', error);
+        // A response means the provider answered and refused; no response means the network failed or timed out.
+        say('is-error', response
+          ? `El servicio de formularios rechazó el envío, así que tu consulta no llegó. Inténtalo de nuevo más tarde. ${kept}`
+          : `No se pudo enviar la consulta. Revisa tu conexión y vuelve a intentarlo. ${kept}`);
       } finally {
+        clearTimeout(timeout);
         button.disabled = false;
         button.textContent = label;
         status.focus();

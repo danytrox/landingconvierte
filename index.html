@@ -3,31 +3,71 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Creamos páginas web modernas, rápidas y orientadas a conseguir clientes para negocios y profesionales en Chile.">
+  <meta name="description" content="Diseño de páginas web y landing pages para negocios en Chile. Sitios adaptados a móviles, con formulario de contacto y publicación en tu dominio. Cuéntame tu idea.">
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#0b0f16">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="es_CL">
-  <meta property="og:title" content="LandingConvierte — Páginas web que venden">
-  <meta property="og:description" content="Diseñamos páginas web rápidas, claras y profesionales para que tu negocio consiga más contactos.">
+  <meta property="og:site_name" content="LandingConvierte">
+  <meta property="og:title" content="Diseño de páginas web en Chile | LandingConvierte">
+  <meta property="og:description" content="Diseño de páginas web y landing pages para negocios en Chile. Sitios adaptados a móviles, con formulario de contacto y publicación en tu dominio. Cuéntame tu idea.">
   <meta property="og:url" content="https://landingconvierte.cl/">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="LandingConvierte — Páginas web que venden">
-  <meta name="twitter:description" content="Diseñamos páginas web rápidas, claras y profesionales para que tu negocio consiga más contactos.">
+  <meta property="og:image" content="https://landingconvierte.cl/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Diseño web y landing pages para negocios en Chile">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Diseño de páginas web en Chile | LandingConvierte">
+  <meta name="twitter:description" content="Diseño de páginas web y landing pages para negocios en Chile. Sitios adaptados a móviles, con formulario de contacto y publicación en tu dominio. Cuéntame tu idea.">
+  <meta name="twitter:image" content="https://landingconvierte.cl/og-image.png">
   <link rel="canonical" href="https://landingconvierte.cl/">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "ProfessionalService",
-    "name": "LandingConvierte",
-    "url": "https://landingconvierte.cl/",
-    "description": "Diseño y desarrollo de páginas web para negocios y profesionales.",
-    "areaServed": "CL",
-    "serviceType": ["Diseño de páginas web", "Landing pages", "Optimización web"]
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://landingconvierte.cl/#organization",
+        "name": "LandingConvierte",
+        "url": "https://landingconvierte.cl/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://landingconvierte.cl/logo.png",
+          "width": 512,
+          "height": 512
+        },
+        "description": "Diseño de páginas web y landing pages para negocios y profesionales en Chile."
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://landingconvierte.cl/#website",
+        "url": "https://landingconvierte.cl/",
+        "name": "LandingConvierte",
+        "alternateName": "Landing Convierte",
+        "publisher": {
+          "@id": "https://landingconvierte.cl/#organization"
+        },
+        "inLanguage": "es-CL"
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://landingconvierte.cl/#webpage",
+        "url": "https://landingconvierte.cl/",
+        "name": "Diseño de páginas web en Chile para negocios | LandingConvierte",
+        "description": "Diseño de páginas web y landing pages para negocios en Chile. Sitios adaptados a móviles, con formulario de contacto y publicación en tu dominio. Cuéntame tu idea.",
+        "isPartOf": {
+          "@id": "https://landingconvierte.cl/#website"
+        },
+        "about": {
+          "@id": "https://landingconvierte.cl/#organization"
+        },
+        "inLanguage": "es-CL"
+      }
+    ]
   }
   </script>
-  <title>LandingConvierte — Tu negocio, mejor en internet</title>
+  <title>Diseño de páginas web en Chile para negocios | LandingConvierte</title>
   <style>
     :root {
       --ink: #f2f5fb;
@@ -134,6 +174,7 @@
     .motion-ready .reveal.is-visible { opacity: 1; transform: translateY(0); }
     .grid3 .reveal:nth-child(2) { transition-delay: 70ms; }
     .grid3 .reveal:nth-child(3) { transition-delay: 140ms; }
+    .faq-list { display:grid; gap:14px; max-width:900px; } .faq-item { padding:22px 24px; border:1px solid var(--line); border-radius:18px; background:#131b28; } .faq-item h3 { margin:0 0 9px; font-size:1.06rem; } .faq-item p { margin:0; color:var(--muted); line-height:1.65; } .card a:not(.button) { color:#c6caff; text-decoration:underline; text-underline-offset:3px; }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: 1ms !important; }
       .motion-ready .reveal, .motion-ready .reveal.is-visible { opacity: 1; transform: none; }
@@ -143,16 +184,18 @@
 </head>
 <body>
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
-  <header><div class="wrap"><nav aria-label="Navegación principal"><a class="brand" href="#inicio" aria-label="LandingConvierte, inicio"><span class="mark">N</span>LandingConvierte</a><div class="links"><a href="#servicios" data-section-link="servicios">Servicios</a><a href="#proceso" data-section-link="proceso">Proceso</a><a href="#formulario" data-section-link="formulario">Contacto</a></div><a class="button primary" href="#formulario">Hablemos →</a></nav></div></header>
+  <header><div class="wrap"><nav aria-label="Navegación principal"><a class="brand" href="#inicio" aria-label="LandingConvierte, inicio"><span class="mark">N</span>LandingConvierte</a><div class="links"><a href="#servicios" data-section-link="servicios">Servicios</a><a href="/landing-page.html">Landing pages</a><a href="#proceso" data-section-link="proceso">Proceso</a><a href="#formulario" data-section-link="formulario">Contacto</a></div><a class="button primary" href="#formulario">Hablemos →</a></nav></div></header>
   <main id="contenido">
-    <section id="inicio" class="hero"><div class="wrap hero-grid"><div class="hero-copy"><span class="eyebrow"><span class="availability-dot" aria-hidden="true"></span>Cupos abiertos este mes</span><h1>Tu negocio merece una web que venda.</h1><p>Diseñamos páginas rápidas, claras y profesionales para que tus clientes entiendan lo que haces y se animen a contactarte.</p><div class="actions"><a class="button primary" href="#formulario">Quiero mi página →</a><a class="button ghost" href="#servicios">Ver servicios</a></div><div class="proof"><div class="avatars"><span class="avatar">AM</span><span class="avatar">JS</span><span class="avatar">CR</span></div><span>Proyectos simples, sin vueltas.</span></div></div><div class="mockup"><div class="blob"></div><div class="browser"><div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div class="screen"><div class="screen-top"><small>landingconvierte.cl</small><h3>Una primera impresión que trabaja por ti.</h3><span style="display:inline-block;padding:8px 12px;border-radius:999px;background:#c8f169;color:#172033;font-size:.7rem;font-weight:800">CONVERSEMOS →</span></div><div class="screen-card"><div class="mini"></div><div class="mini"></div></div></div></div></div></div></section>
+    <section id="inicio" class="hero"><div class="wrap hero-grid"><div class="hero-copy"><span class="eyebrow"><span class="availability-dot" aria-hidden="true"></span>Diseño web y landing pages en Chile</span><h1>Diseño de páginas web para negocios en Chile</h1><p>Creamos landing pages y sitios web para que negocios y profesionales expliquen sus servicios y reciban consultas. Diseño adaptado a móviles, formulario de contacto y publicación en tu dominio.</p><div class="actions"><a class="button primary" href="#formulario">Cuéntame tu proyecto →</a><a class="button ghost" href="/landing-page.html">Diseño de landing pages</a></div><div class="proof"><span>Landing pages · sitios para servicios · optimización web</span></div></div><div class="mockup"><div class="blob"></div><div class="browser"><div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><div class="screen"><div class="screen-top"><small>landingconvierte.cl</small><h3>Una primera impresión que trabaja por ti.</h3><span style="display:inline-block;padding:8px 12px;border-radius:999px;background:#c8f169;color:#172033;font-size:.7rem;font-weight:800">CONVERSEMOS →</span></div><div class="screen-card"><div class="mini"></div><div class="mini"></div></div></div></div></div></div></section>
     <section id="formulario" class="lead-section"><div class="wrap"><div class="lead-panel reveal"><div><span class="eyebrow">Cuéntame tu idea</span><h2>Recibe una propuesta para tu página.</h2><p>Completa el formulario y te responderemos con una idea inicial, alcance y próximos pasos.</p><div class="lead-points"><span><b>✓</b> Respuesta clara y sin compromiso</span><span><b>✓</b> Diseños rápidos y adaptados a móvil</span><span><b>✓</b> Publicación con dominio propio</span></div></div><form class="lead-form" action="https://api.web3forms.com/submit" method="POST"><input type="hidden" name="access_key" value="583e9e8a-e418-40a8-82af-af64e8715366"><input type="hidden" name="subject" value="Nueva consulta desde LandingConvierte"><input type="hidden" name="from_name" value="LandingConvierte"><input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none"><div class="field"><label for="name">Nombre</label><input id="name" name="name" type="text" autocomplete="name" required></div><div class="field"><label for="email">Correo</label><input id="email" name="email" type="email" autocomplete="email" required></div><div class="field"><label for="company">Negocio o marca</label><input id="company" name="company" type="text" autocomplete="organization"></div><div class="field"><label for="service">¿Qué necesitas?</label><select id="service" name="service"><option>Landing page</option><option>Página para servicios</option><option>Rediseño de página existente</option><option>Otro</option></select></div><div class="field full"><label for="message">Cuéntanos brevemente</label><textarea id="message" name="message" required placeholder="¿Qué hace tu negocio y qué te gustaría lograr?"></textarea></div><p class="form-note">Usaremos estos datos únicamente para responder tu consulta.</p><button class="button primary" type="submit">Solicitar propuesta →</button></form></div></div></section>
-    <section id="servicios"><div class="wrap"><div class="section-head reveal"><span class="eyebrow">Lo que hacemos</span><h2>Todo lo necesario para salir bien a internet.</h2><p>Una solución enfocada en tu negocio, no en llenarte de funciones que no necesitas.</p></div><div class="grid3"><article class="card reveal"><div class="icon">✦</div><h3>Landing page</h3><p>Una página de una sola vista, enfocada en presentar tu oferta y generar contactos.</p></article><article class="card reveal"><div class="icon">↗</div><h3>Web para servicios</h3><p>Organiza tus servicios, equipo, portafolio y formas de contacto en un sitio profesional.</p></article><article class="card reveal"><div class="icon">⚡</div><h3>Optimización</h3><p>Diseño responsive, carga rápida y una base lista para crecer contigo.</p></article></div></div></section>
+    <section id="servicios"><div class="wrap"><div class="section-head reveal"><span class="eyebrow">Lo que hacemos</span><h2>Todo lo necesario para salir bien a internet.</h2><p>Una solución enfocada en tu negocio, no en llenarte de funciones que no necesitas.</p></div><div class="grid3"><article class="card reveal"><div class="icon">✦</div><h3><a href="/landing-page.html">Landing page</a></h3><p>Una página enfocada en una oferta y una acción principal. <a href="/landing-page.html">Conoce cómo la planteamos →</a></p></article><article class="card reveal"><div class="icon">↗</div><h3>Web para servicios</h3><p>Organiza tus servicios, equipo, portafolio y formas de contacto en un sitio profesional.</p></article><article class="card reveal"><div class="icon">⚡</div><h3>Optimización</h3><p>Diseño responsive, carga rápida y una base lista para crecer contigo.</p></article></div></div></section>
+    <section id="elige-pagina"><div class="wrap"><div class="section-head reveal"><span class="eyebrow">El formato adecuado</span><h2>¿Landing page o sitio web?</h2><p>La mejor estructura depende de lo que ofreces y de la acción que esperas de tus visitas.</p></div><div class="grid3"><article class="card reveal"><div class="icon">01</div><h3>Landing page</h3><p>Conviene cuando quieres presentar una oferta o servicio concreto y guiar a las personas hacia una consulta.</p><a href="/landing-page.html">Ver diseño de landing pages →</a></article><article class="card reveal"><div class="icon">02</div><h3>Sitio web de servicios</h3><p>Conviene cuando necesitas organizar varios servicios, información del negocio y formas de contacto.</p><a href="#formulario">Cuéntame qué necesitas →</a></article></div></div></section>
     <section id="proceso"><div class="wrap"><div class="section-head reveal"><span class="eyebrow">Cómo trabajamos</span><h2>De la idea a tu web en pocos pasos.</h2></div><div class="grid3"><article class="card reveal"><div class="icon">01</div><h3>Conversamos</h3><p>Entendemos tu negocio, tus clientes y qué quieres conseguir.</p></article><article class="card reveal"><div class="icon">02</div><h3>Diseñamos</h3><p>Armamos una propuesta visual y ajustamos los detalles contigo.</p></article><article class="card reveal"><div class="icon">03</div><h3>Publicamos</h3><p>Dejamos tu página online, rápida y lista para compartir.</p></article></div></div></section>
-    <section id="contacto"><div class="wrap"><div class="offer reveal"><div><span class="eyebrow">Primer paso</span><h2>Cuéntame qué quieres construir.</h2><p>Te respondo con una propuesta simple, alcance claro y sin compromiso.</p><a class="button" href="https://wa.me/56900000000?text=Hola%2C%20quiero%20cotizar%20una%20p%C3%A1gina%20web">Escribir por WhatsApp →</a></div><div class="price"><span>Landing inicial</span><strong>Desde $___</strong><span>El precio final depende del contenido y las funciones que necesites.</span></div></div></div></section>
+    <section id="preguntas-frecuentes"><div class="wrap"><div class="section-head reveal"><span class="eyebrow">Preguntas frecuentes</span><h2>Antes de crear tu página</h2><p>Respuestas claras para elegir el tipo de sitio y entender el SEO inicial.</p></div><div class="faq-list"><article class="faq-item"><h3>¿Qué diferencia hay entre una landing page y un sitio web?</h3><p>Una landing page concentra una oferta y una acción principal. Un sitio web de servicios organiza varias áreas del negocio y puede tener diferentes secciones o páginas.</p></article><article class="faq-item"><h3>¿La página puede aparecer primera en Google?</h3><p>Nadie puede garantizar una posición específica. Configuramos una base técnica y contenido claro para que los buscadores entiendan el sitio; el posicionamiento también depende de la competencia, la utilidad del contenido, las menciones y el tiempo.</p></article><article class="faq-item"><h3>¿Qué incluye la base SEO?</h3><p>Considera títulos y descripciones, encabezados descriptivos, enlaces rastreables, canonical, sitemap, robots.txt y datos estructurados coherentes con el contenido. Esto facilita el rastreo y la comprensión, pero no garantiza indexación ni posiciones.</p></article><article class="faq-item"><h3>¿Qué información necesito para pedir una propuesta?</h3><p>Cuéntame qué hace tu negocio, qué servicio quieres presentar, a quién quieres llegar y qué acción esperas. Con eso podemos conversar sobre el alcance.</p></article></div></div></section>
+    <section id="contacto"><div class="wrap"><div class="offer"><div><span class="eyebrow">Siguiente paso</span><h2>Cuéntame qué quieres construir.</h2><p>Describe tu negocio y el objetivo de la página. Revisamos el alcance contigo antes de definir la propuesta.</p><a class="button" href="#formulario">Solicitar una propuesta →</a></div><div class="price"><span>Una página alineada con tu objetivo</span><strong>Alcance claro</strong><span>El tipo de página y sus funciones se definen según lo que necesite tu proyecto.</span></div></div></div></section>
   </main>
-  <footer><div class="wrap footer-row"><span>© 2026 LandingConvierte</span><span>Hecho para negocios que quieren crecer.</span></div></footer>
-  <div class="floating-cta" aria-label="Contacto rápido"><a class="button" href="https://wa.me/56900000000?text=Hola%2C%20quiero%20cotizar%20una%20p%C3%A1gina%20web">Cotiza tu web →</a></div>
+  <footer><div class="wrap footer-row"><span>© 2026 LandingConvierte</span><span><a href="/landing-page.html">Diseño de landing pages</a> · Hecho para negocios.</span></div></footer>
+  <div class="floating-cta" aria-label="Contacto rápido"><a class="button" href="#formulario">Solicitar propuesta →</a></div>
   <script>
     (() => {
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

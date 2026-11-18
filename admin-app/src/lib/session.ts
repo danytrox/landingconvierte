@@ -1,13 +1,22 @@
-// GitHub token kept in this browser only (storage can be unavailable: never throw).
+// GitHub token kept only for this browser tab (sessionStorage): it disappears when the tab
+// closes, so a stolen or forgotten browser profile does not keep a write token around.
+// Storage can be unavailable: never throw.
 const KEY = 'landingconvierte-admin-token';
 
+// Earlier versions stored the token in localStorage; remove it so it does not linger.
+function wipeLegacyToken() {
+  try { localStorage.removeItem(KEY); } catch { /* ignore */ }
+}
+
 export function readToken(): string | null {
-  try { return localStorage.getItem(KEY); } catch { return null; }
+  wipeLegacyToken();
+  try { return sessionStorage.getItem(KEY); } catch { return null; }
 }
 export function writeToken(token: string | null) {
+  wipeLegacyToken();
   try {
-    if (token) localStorage.setItem(KEY, token);
-    else localStorage.removeItem(KEY);
+    if (token) sessionStorage.setItem(KEY, token);
+    else sessionStorage.removeItem(KEY);
   } catch { /* storage blocked: the session just won't survive a reload */ }
 }
 export function readFlag(key: string): boolean {

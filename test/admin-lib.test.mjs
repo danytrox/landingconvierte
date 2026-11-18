@@ -143,3 +143,20 @@ test('validatePage rejects unsafe links before publishing and accepts safe ones'
   assert.equal(problems.length, 1);
   assert.match(problems[0].message, /enlace no permitido/);
 });
+
+test('session token lives in sessionStorage and a legacy localStorage token is wiped', async () => {
+  const mk = () => { const m = new Map(); return { getItem: k => (m.has(k) ? m.get(k) : null), setItem: (k, v) => m.set(k, String(v)), removeItem: k => m.delete(k), m }; };
+  globalThis.localStorage = mk();
+  globalThis.sessionStorage = mk();
+  localStorage.setItem('landingconvierte-admin-token', 'old');
+  const { readToken, writeToken } = await import('../admin-app/src/lib/session.ts');
+  assert.equal(readToken(), null);
+  assert.equal(localStorage.getItem('landingconvierte-admin-token'), null);
+  writeToken('tok');
+  assert.equal(sessionStorage.getItem('landingconvierte-admin-token'), 'tok');
+  assert.equal(localStorage.getItem('landingconvierte-admin-token'), null);
+  assert.equal(readToken(), 'tok');
+  writeToken(null);
+  assert.equal(readToken(), null);
+  delete globalThis.localStorage; delete globalThis.sessionStorage;
+});

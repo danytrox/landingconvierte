@@ -90,6 +90,7 @@ collections:
               - { name: legend, label: Explicación numerada, widget: list, field: { name: item, label: Punto, widget: string } }
               - name: examples
                 label: Rubros
+                min: 1
                 widget: list
                 summary: "{{fields.label}}"
                 fields:

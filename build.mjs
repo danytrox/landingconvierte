@@ -1,17 +1,83 @@
 #!/usr/bin/env node
 // Genera dist/ a partir de content/*.json + archivos estáticos.
 // Uso: node build.mjs
+// Variables opcionales: CONTENT_DIR (por defecto content/), OUT_DIR (por defecto dist/),
+// CMS_AUTH_BASE_URL (URL https del Worker de login del CMS, se escribe en dist/admin/config.yml).
 import { readFileSync, writeFileSync, mkdirSync, cpSync, existsSync, rmSync } from 'node:fs';
-import { join, dirname } from 'node:path';
+import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
-const DIST = join(ROOT, 'dist');
+const CONTENT = process.env.CONTENT_DIR ? resolve(process.env.CONTENT_DIR) : join(ROOT, 'content');
+const DIST = process.env.OUT_DIR ? resolve(process.env.OUT_DIR) : join(ROOT, 'dist');
 
-const read = p => JSON.parse(readFileSync(join(ROOT, 'content', p), 'utf8'));
+const read = p => JSON.parse(readFileSync(join(CONTENT, p), 'utf8'));
 const site = read('site.json');
 const idx = read('index.json');
 const lp = read('landing-page.json');
+
+// ---------- Validación de contenido ----------
+// Revisa lo que el build usa sin condiciones; si falta algo, sale con un mensaje claro
+// en vez de un TypeError a mitad de la generación.
+
+const contentErrors = [];
+const getPath = (obj, path) => path.split('.').reduce((o, k) => (o == null ? undefined : o[k]), obj);
+const requireField = (obj, file, path, kind) => {
+  const value = getPath(obj, path);
+  const where = `content/${file} → ${path}`;
+  if (kind === 'object' && (value === null || typeof value !== 'object' || Array.isArray(value))) {
+    contentErrors.push(`${where} es obligatorio`);
+  } else if (kind === 'string' && typeof value !== 'string') {
+    contentErrors.push(`${where} debe ser un texto`);
+  } else if (kind === 'list' && !Array.isArray(value)) {
+    contentErrors.push(`${where} debe ser una lista`);
+  }
+};
+const requireAll = (obj, file, kind, paths) => paths.forEach(p => requireField(obj, file, p, kind));
+
+requireAll(site, 'site.json', 'object', ['footer']);
+requireAll(site, 'site.json', 'string', ['navCtaHref', 'footer.legal']);
+requireAll(site, 'site.json', 'list', ['nav', 'footer.links']);
+
+requireAll(idx, 'index.json', 'object', [
+  'meta', 'hero', 'demo', 'services', 'compare', 'process', 'faq', 'contact', 'contact.labels', 'schema'
+]);
+requireAll(idx, 'index.json', 'list', [
+  'demo.examples', 'demo.legend', 'services.items', 'services.included', 'compare.columns',
+  'process.steps', 'faq.items', 'contact.bullets', 'contact.serviceOptions'
+]);
+if (Array.isArray(idx.demo?.examples)) {
+  if (idx.demo.examples.length === 0) {
+    contentErrors.push('content/index.json → demo.examples debe tener al menos un ejemplo');
+  } else {
+    requireField(idx, 'index.json', 'demo.examples.0.trust', 'list');
+  }
+}
+
+requireAll(lp, 'landing-page.json', 'object', [
+  'meta', 'hero', 'focus', 'content', 'compare', 'process', 'faq', 'ctaBand', 'schema'
+]);
+requireAll(lp, 'landing-page.json', 'list', [
+  'focus.items', 'content.columns', 'compare.columns', 'process.steps', 'faq.items'
+]);
+
+if (contentErrors.length) {
+  for (const e of contentErrors) console.error(`Error de contenido: ${e}`);
+  process.exit(1);
+}
+
+// ---------- URL del login del CMS ----------
+
+const CMS_AUTH_PLACEHOLDER = 'REPLACE_WITH_ACCOUNT';
+const cmsAuthBaseUrl = process.env.CMS_AUTH_BASE_URL?.trim();
+if (cmsAuthBaseUrl) {
+  let valid = false;
+  try { valid = new URL(cmsAuthBaseUrl).protocol === 'https:'; } catch { valid = false; }
+  if (!valid) {
+    console.error(`Error de configuración: CMS_AUTH_BASE_URL debe ser una URL https:// (recibido: ${cmsAuthBaseUrl})`);
+    process.exit(1);
+  }
+}
 
 const esc = s => String(s)
   .replaceAll('&', '&amp;')
@@ -89,13 +155,16 @@ ${nav.map(item => {
 }).join('\n')}
         </ul>
       </nav>
-      <a class="btn btn-signal" href="${esc(prefix + site.navCtaHref)}">${esc(site.navCta)}</a>
+      <a class="btn btn-signal" href="${esc(resolveHref(site.navCtaHref, prefix))}">${esc(site.navCta)}</a>
       <button class="nav-toggle" type="button" aria-controls="menu-panel" aria-expanded="false" aria-label="Abrir menú">
         ${toggleSvg}
       </button>
     </div>
   </header>
 `;
+
+// Texto legal del pie, igual en todas las páginas ({year} = año actual)
+const footerLegal = () => `<p class="footer-legal">${esc(site.footer.legal.replace('{year}', String(year)))}</p>`;
 
 const footerLinks = (links, prefix) => links.map(l => {
   const href = resolveHref(l.href, prefix);
@@ -340,7 +409,7 @@ ${idx.contact.serviceOptions.map(o => `              <option>${esc(o)}</option>`
 ${footerLinks(site.footer.links, '')}
         </ul>
       </div>
-      <p class="footer-legal">${esc(site.footer.legal.replace('{year}', String(year)))}</p>
+      ${footerLegal()}
     </div>
   </footer>
 
@@ -496,7 +565,7 @@ ${lp.faq.items.map(f => `          <details>
 ${footerLinks(site.footer.links.filter(l => l.href !== '/' && l.href !== '/landing-page'), '/')}
         </ul>
       </div>
-      <p class="footer-legal">${esc(`© ${year} ${site.brand}.`)} <a href="/">Diseño de páginas web para negocios en Chile</a>.</p>
+      ${footerLegal()}
     </div>
   </footer>
 
@@ -526,6 +595,15 @@ for (const item of statics) {
     continue;
   }
   cpSync(src, join(DIST, item), { recursive: true });
+}
+
+// La URL del Worker se inyecta solo en dist/; admin/config.yml conserva el marcador.
+const distCmsConfig = join(DIST, 'admin', 'config.yml');
+if (cmsAuthBaseUrl) {
+  const config = readFileSync(distCmsConfig, 'utf8');
+  writeFileSync(distCmsConfig, config.replace(/^(\s*base_url:\s*).*$/m, `$1${cmsAuthBaseUrl}`));
+} else if (readFileSync(distCmsConfig, 'utf8').includes(CMS_AUTH_PLACEHOLDER)) {
+  console.warn('Aviso: CMS_AUTH_BASE_URL no está definida; el login del CMS (/admin) no funcionará hasta configurarla en Cloudflare Pages.');
 }
 
 console.log(`OK: dist/ generado (index.html ${indexHtml.length} bytes, landing-page.html ${landingHtml.length} bytes)`);

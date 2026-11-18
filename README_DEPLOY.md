@@ -1,5 +1,22 @@
 # Publicar LandingConvierte
 
+## Antes de mergear
+
+Este cambio reemplaza las páginas HTML de la raíz por `content/*.json` + `node build.mjs`. Si se mergea a `main` sin estos pasos, Cloudflare Pages deja el sitio sin páginas o el CMS sin login:
+
+- [ ] **Build de Cloudflare Pages** (Settings → Builds): build command `node build.mjs`, build output directory `dist`.
+- [ ] **Variable `CMS_AUTH_BASE_URL`** en Cloudflare Pages (Settings → Variables and secrets) con la URL del Worker desplegado, por ejemplo `https://landingconvierte-cms-auth.TU-CUENTA.workers.dev`. El build la escribe en `dist/admin/config.yml`; sin ella el login del CMS no funciona y el build muestra un aviso.
+- [ ] **Worker y OAuth App**: desplegar `worker/` con wrangler y crear la OAuth App de GitHub (pasos 1 a 3 de [Editar el contenido con Decap CMS](#editar-el-contenido-con-decap-cms)).
+- [ ] **CI en verde**: el workflow `Build` (`.github/workflows/build.yml`) genera el sitio y corre los tests en cada push y pull request.
+
+Correr los tests en local (Node 22, sin dependencias):
+
+```bash
+npm test            # equivale a: node --test "test/*.test.mjs"
+```
+
+Los tests generan el sitio en una carpeta temporal y comprueban que `index.html` y `landing-page.html` sigan siendo equivalentes a las páginas originales (`test/fixtures/`), que se publique `/admin` y que `dist/` no incluya archivos internos (`build.mjs`, `content/`, `worker/`…). Si se cambia un texto a propósito, actualizar el fixture correspondiente.
+
 ## Opción recomendada: Cloudflare Pages + GitHub
 
 1. Crear un repositorio público o privado en GitHub, por ejemplo `landingconvierte`.

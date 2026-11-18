@@ -139,6 +139,13 @@ test('CMS_AUTH_BASE_URL falta en el build de producción de Cloudflare (main): s
   const preview = build({ env: { CF_PAGES: '1', CF_PAGES_BRANCH: 'feat/x' } });
   assert.equal(preview.status, 0, preview.stderr);
   assert.match(preview.stdout + preview.stderr, /Aviso: .*CMS_AUTH_BASE_URL/);
+
+  const workers = build({ env: { WORKERS_CI: '1', WORKERS_CI_BRANCH: 'main' } });
+  assert.equal(workers.status, 1);
+  assert.match(workers.stderr, /Error de configuración: CMS_AUTH_BASE_URL es obligatoria/);
+
+  const workersPreview = build({ env: { WORKERS_CI: '1', WORKERS_CI_BRANCH: 'feat/x' } });
+  assert.equal(workersPreview.status, 0, workersPreview.stderr);
 });
 
 test('texto obligatorio faltante dentro de una lista: sale con código 1 y nombra el campo', () => {

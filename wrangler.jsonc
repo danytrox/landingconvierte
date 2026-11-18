@@ -1,0 +1,9 @@
+// Cloudflare Workers static-assets deploy for the landing (Workers Builds runs `npx wrangler deploy`).
+{
+  "name": "landingconvierte",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}

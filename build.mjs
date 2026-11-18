@@ -169,9 +169,12 @@ if (cmsAuthBaseUrl) {
     console.error(`Error de configuración: CMS_AUTH_BASE_URL debe ser una URL https:// (recibido: ${cmsAuthBaseUrl})`);
     process.exit(1);
   }
-} else if (process.env.CF_PAGES === '1' && process.env.CF_PAGES_BRANCH === 'main') {
+} else if (
+  (process.env.CF_PAGES === '1' && process.env.CF_PAGES_BRANCH === 'main') ||
+  (process.env.WORKERS_CI === '1' && process.env.WORKERS_CI_BRANCH === 'main')
+) {
   // En producción un panel sin login no sirve: mejor que el deploy falle a que quede roto en silencio.
-  console.error('Error de configuración: CMS_AUTH_BASE_URL es obligatoria en el build de producción (Cloudflare Pages, rama main). Defínela en Settings → Environment variables.');
+  console.error('Error de configuración: CMS_AUTH_BASE_URL es obligatoria en el build de producción (Cloudflare, rama main). Defínela en las variables del build (Settings → Build → Variables and secrets).');
   process.exit(1);
 }
 

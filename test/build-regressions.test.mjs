@@ -191,3 +191,21 @@ test('OUT_DIR ajeno no vacío se rechaza sin borrar; vacío o generado por el bu
   assert.ok(existsSync(join(empty, 'index.html')));
   assert.ok(!existsSync(join(empty, 'stale.txt')), 'una salida previa del build se reemplaza completa');
 });
+
+test('enlaces editables: solo #, /ruta, https:, mailto: y tel:; javascript: y similares se rechazan', () => {
+  for (const bad of ['javascript:alert(1)', ' JavaScript:alert(1)', 'data:text/html,x', 'http://x.cl', '//evil.example', 'vbscript:x']) {
+    const res = build({ mutate: f => { f.index.hero.ctaPrimaryHref = bad; } });
+    assert.equal(res.status, 1, `debió rechazar ${bad}`);
+    assert.match(res.stderr, /Error de contenido: content\/index\.json → hero\.ctaPrimaryHref no es un enlace permitido/);
+  }
+  const nested = build({ mutate: f => { f.site.footer.links[0].href = 'javascript:alert(1)'; } });
+  assert.equal(nested.status, 1);
+  assert.match(nested.stderr, /content\/site\.json → footer\.links\.0\.href no es un enlace permitido/);
+
+  const ok = build({ mutate: f => {
+    f.index.hero.ctaPrimaryHref = 'https://wa.me/56900000000';
+    f.index.hero.ctaSecondaryHref = 'mailto:hola@landingconvierte.cl';
+    f.site.footer.links[0].href = 'tel:+56900000000';
+  } });
+  assert.equal(ok.status, 0, ok.stderr);
+});

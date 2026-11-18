@@ -130,3 +130,16 @@ test('schema covers every key of the content files', async () => {
     }
   }
 });
+
+test('validatePage rejects unsafe links before publishing and accepts safe ones', async () => {
+  const { PAGES } = await import('../admin-app/src/lib/schema.ts');
+  const { validatePage } = await import('../admin-app/src/lib/validate.ts');
+  const { readFileSync } = await import('node:fs');
+  const page = PAGES.find(p => p.path === 'content/index.json');
+  const data = JSON.parse(readFileSync(new URL('../content/index.json', import.meta.url), 'utf8'));
+  assert.deepEqual(validatePage(page, data), []);
+  data.hero.ctaPrimaryHref = 'javascript:alert(1)';
+  const problems = validatePage(page, data);
+  assert.equal(problems.length, 1);
+  assert.match(problems[0].message, /enlace no permitido/);
+});

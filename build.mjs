@@ -154,6 +154,28 @@ requireEach(lp, 'landing-page.json', 'compare.columns', ['title', 'description']
 requireEach(lp, 'landing-page.json', 'process.steps', ['title', 'description']);
 requireEach(lp, 'landing-page.json', 'faq.items', ['question', 'answer']);
 
+// Enlaces editables: cualquier campo cuyo nombre termina en "href". Solo destinos seguros;
+// así un valor como javascript:... nunca llega al HTML publicado.
+const SAFE_HREF = /^(#|\/(?!\/)|https:\/\/|mailto:|tel:)/i;
+const checkHrefs = (value, file, path) => {
+  if (Array.isArray(value)) value.forEach((v, i) => checkHrefs(v, file, `${path}.${i}`));
+  else if (value && typeof value === 'object') {
+    for (const [k, v] of Object.entries(value)) {
+      const p = path ? `${path}.${k}` : k;
+      if (/href$/i.test(k) && typeof v === 'string' && !SAFE_HREF.test(v)) {
+        contentErrors.push(`content/${file} → ${p} no es un enlace permitido (usa #seccion, /ruta, https://, mailto: o tel:)`);
+      } else checkHrefs(v, file, p);
+    }
+  }
+};
+checkHrefs(site, 'site.json', '');
+checkHrefs(idx, 'index.json', '');
+checkHrefs(lp, 'landing-page.json', '');
+for (const [obj, file, path] of [[site, 'site.json', 'domain'], [idx, 'index.json', 'meta.canonical'], [lp, 'landing-page.json', 'meta.canonical']]) {
+  const v = getPath(obj, path);
+  if (typeof v === 'string' && !/^https:\/\/[^/]/i.test(v)) contentErrors.push(`content/${file} → ${path} debe empezar con https://`);
+}
+
 if (contentErrors.length) {
   for (const e of contentErrors) console.error(`Error de contenido: ${e}`);
   process.exit(1);

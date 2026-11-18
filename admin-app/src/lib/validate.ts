@@ -3,12 +3,18 @@ import type { Field, Page } from './schema.ts';
 
 export interface Problem { section: string; message: string }
 
+// Same rule as build.mjs: link fields (name ending in "href") only accept safe destinations.
+const SAFE_HREF = /^(#|\/(?!\/)|https:\/\/|mailto:|tel:)/i;
+
 function walk(fields: Field[], value: unknown, where: string, out: string[]) {
   const rec = (value ?? {}) as Record<string, unknown>;
   for (const f of fields) {
     const v = rec[f.name];
     const label = `${where}${f.label}`;
     if (f.pattern && typeof v === 'string' && !new RegExp(f.pattern[0]).test(v)) out.push(`${label}: ${f.pattern[1]}`);
+    if (/href$/i.test(f.name) && typeof v === 'string' && !SAFE_HREF.test(v)) {
+      out.push(`${label}: enlace no permitido (usa #seccion, /ruta, https://, mailto: o tel:)`);
+    }
     if (f.widget === 'object' && f.fields) walk(f.fields, v, `${label} › `, out);
     if (f.widget === 'list' && Array.isArray(v)) {
       if (f.min && v.length < f.min) out.push(`${label}: debe tener al menos ${f.min}`);

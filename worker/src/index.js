@@ -2,7 +2,9 @@
 // Routes: /auth starts the OAuth flow, /callback exchanges the code for a token
 // and hands it to the Decap window through postMessage (only to ALLOWED_ORIGIN).
 const STATE_COOKIE = 'decap_oauth_state';
-const SCOPE = 'public_repo,user';
+// public_repo: commit content to the public repo; read:user: show who is signed in.
+const SCOPE = 'public_repo,read:user';
+const REQUIRED_ENV = ['ALLOWED_ORIGIN', 'GITHUB_CLIENT_ID', 'GITHUB_CLIENT_SECRET'];
 
 const randomHex = bytes => {
   const buf = new Uint8Array(bytes);
@@ -68,20 +70,25 @@ const handleCallback = async (request, url, env) => {
   if (!code || !state || !expected || state !== expected) {
     return callbackPage(origin, 'error', { message: 'Invalid OAuth state' });
   }
-  const res = await fetch('https://github.com/login/oauth/access_token', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      'User-Agent': 'decap-oauth-worker'
-    },
-    body: JSON.stringify({
-      client_id: env.GITHUB_CLIENT_ID,
-      client_secret: env.GITHUB_CLIENT_SECRET,
-      code,
-      redirect_uri: `${url.origin}/callback`
-    })
-  });
+  let res;
+  try {
+    res = await fetch('https://github.com/login/oauth/access_token', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'User-Agent': 'decap-oauth-worker'
+      },
+      body: JSON.stringify({
+        client_id: env.GITHUB_CLIENT_ID,
+        client_secret: env.GITHUB_CLIENT_SECRET,
+        code,
+        redirect_uri: `${url.origin}/callback`
+      })
+    });
+  } catch {
+    return callbackPage(origin, 'error', { message: 'Could not reach GitHub, try again' });
+  }
   const data = await res.json().catch(() => ({}));
   if (!res.ok || !data.access_token) {
     return callbackPage(origin, 'error', { message: data.error_description || 'Token exchange failed' });
@@ -92,6 +99,10 @@ const handleCallback = async (request, url, env) => {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    const missing = REQUIRED_ENV.filter(name => !env[name]);
+    if (missing.length) {
+      return new Response(`Worker misconfigured: missing ${missing.join(', ')}`, { status: 500 });
+    }
     if (url.pathname === '/auth') return handleAuth(url, env);
     if (url.pathname === '/callback') return handleCallback(request, url, env);
     return new Response('Not found', { status: 404 });

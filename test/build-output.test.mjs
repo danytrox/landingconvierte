@@ -26,7 +26,7 @@ const PUBLISHED = new Set([
   '404.html', '_headers', 'favicon.svg', 'apple-touch-icon.png', 'logo.png', 'og-image.png',
   'robots.txt', 'sitemap.xml', 'site.webmanifest', 'styles.css', 'main.js', 'fonts', 'admin', 'uploads',
   // marker that lets build.mjs recognize (and safely replace) its own output
-  '.landingconvierte-build'
+  '.landingconvierte-build', '.assetsignore'
 ]);
 
 // Root-only files that must never be published.

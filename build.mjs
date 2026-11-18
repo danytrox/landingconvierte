@@ -741,5 +741,7 @@ if (!cmsAuthBaseUrl) {
   console.warn('Aviso: CMS_AUTH_BASE_URL no está definida; el login del panel (/admin) no funcionará hasta configurarla en Cloudflare Pages.');
 }
 writeFileSync(join(DIST, BUILD_MARKER), 'Generado por build.mjs. Este directorio se borra completo en cada build.\n');
+// Wrangler no publica lo listado en .assetsignore: la marca es solo para el build.
+writeFileSync(join(DIST, '.assetsignore'), `${BUILD_MARKER}\n.assetsignore\n`);
 
 console.log(`OK: dist/ generado (index.html ${indexHtml.length} bytes, landing-page.html ${landingHtml.length} bytes)`);

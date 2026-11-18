@@ -38,6 +38,9 @@ const requireAll = (obj, file, kind, paths) => paths.forEach(p => requireField(o
 requireAll(site, 'site.json', 'object', ['footer']);
 requireAll(site, 'site.json', 'string', ['navCtaHref', 'footer.legal']);
 requireAll(site, 'site.json', 'list', ['nav', 'footer.links']);
+if (typeof site.footer?.legal === 'string' && site.footer.legal.includes('{link}')) {
+  requireAll(site, 'site.json', 'string', ['footer.legalLink.text', 'footer.legalLink.href']);
+}
 
 requireAll(idx, 'index.json', 'object', [
   'meta', 'hero', 'demo', 'services', 'compare', 'process', 'faq', 'contact', 'contact.labels', 'schema'
@@ -163,8 +166,16 @@ ${nav.map(item => {
   </header>
 `;
 
-// Texto legal del pie, igual en todas las páginas ({year} = año actual)
-const footerLegal = () => `<p class="footer-legal">${esc(site.footer.legal.replace('{year}', String(year)))}</p>`;
+// Texto legal del pie, igual en todas las páginas ({year} = año actual,
+// {link} = enlace definido en site.footer.legalLink)
+const footerLegal = () => {
+  const text = esc(site.footer.legal.replace('{year}', String(year)));
+  const link = site.footer.legalLink;
+  const html = text.includes('{link}')
+    ? text.replace('{link}', `<a href="${esc(link.href)}">${esc(link.text)}</a>`)
+    : text;
+  return `<p class="footer-legal">${html}</p>`;
+};
 
 const footerLinks = (links, prefix) => links.map(l => {
   const href = resolveHref(l.href, prefix);

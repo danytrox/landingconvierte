@@ -67,6 +67,21 @@ test('site.footer.legal llega al pie de ambas páginas', () => {
   assert.equal(footerLegal(res.page('landing-page.html')), expected);
 });
 
+test('site.footer.legal: {link} se reemplaza por el enlace de legalLink; sin {link} no hay enlace', () => {
+  const res = build({ mutate: f => {
+    f.site.footer.legal = '© {year} Marca. {link}.';
+    f.site.footer.legalLink = { text: 'Inicio <ok>', href: '/' };
+  } });
+  assert.equal(res.status, 0, res.stderr);
+  const expected = `© ${new Date().getFullYear()} Marca. <a href="/">Inicio &lt;ok&gt;</a>.`;
+  assert.equal(footerLegal(res.page('index.html')), expected);
+  assert.equal(footerLegal(res.page('landing-page.html')), expected);
+
+  const plain = build({ mutate: f => { f.site.footer.legal = 'Sin enlace.'; } });
+  assert.equal(plain.status, 0, plain.stderr);
+  assert.equal(footerLegal(plain.page('landing-page.html')), 'Sin enlace.');
+});
+
 test('CMS_AUTH_BASE_URL: se inyecta en dist/admin/config.yml, avisa si falta y rechaza no-https', () => {
   const url = 'https://x.example.workers.dev';
   const set = build({ env: { CMS_AUTH_BASE_URL: url } });

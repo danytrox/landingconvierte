@@ -50,7 +50,13 @@ collections:
                 fields:
                   - { name: label, label: Texto, widget: string }
                   - { name: href, label: Enlace, widget: string }
-              - { name: legal, label: Texto legal, widget: string, hint: "{year} se reemplaza por el año actual" }
+              - { name: legal, label: Texto legal, widget: string, hint: "{year} se reemplaza por el año actual; {link} por el enlace de abajo" }
+              - name: legalLink
+                label: Enlace del texto legal
+                widget: object
+                fields:
+                  - { name: text, label: Texto, widget: string }
+                  - { name: href, label: Enlace, widget: string }
 
       # ----------------------------------------------------------------- index
       - name: index

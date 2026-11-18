@@ -23,6 +23,7 @@
       { "label": "Preguntas frecuentes", "href": "#preguntas-frecuentes" },
       { "label": "Pedir propuesta", "href": "#formulario" }
     ],
-    "legal": "© {year} LandingConvierte. Diseño de páginas web para negocios en Chile."
+    "legal": "© {year} LandingConvierte. {link}.",
+    "legalLink": { "text": "Diseño de páginas web para negocios en Chile", "href": "/" }
   }
 }

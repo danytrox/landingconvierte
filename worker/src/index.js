@@ -18,14 +18,21 @@ const readCookie = (request, name) => {
   return match ? match.slice(name.length + 1) : null;
 };
 
+const SECURITY_HEADERS = {
+  'X-Frame-Options': 'DENY',
+  'X-Content-Type-Options': 'nosniff',
+  'Referrer-Policy': 'no-referrer'
+};
+
 const clearStateCookie = `${STATE_COOKIE}=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax`;
 
 const callbackPage = (origin, status, payload) => {
+  const nonce = randomHex(16);
   const message = `authorization:github:${status}:${JSON.stringify(payload)}`;
   const js = s => JSON.stringify(s).replaceAll('<', '\\u003c');
   return new Response(`<!doctype html>
 <html><body><p>Autorizando…</p>
-<script>
+<script nonce="${nonce}">
   const origin = ${js(origin)};
   const message = ${js(message)};
   window.addEventListener('message', function onMessage(e) {
@@ -36,6 +43,8 @@ const callbackPage = (origin, status, payload) => {
   window.opener.postMessage('authorizing:github', origin);
 </script></body></html>`, {
     headers: {
+      ...SECURITY_HEADERS,
+      'Content-Security-Policy': `default-src 'none'; script-src 'nonce-${nonce}'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'`,
       'Content-Type': 'text/html; charset=utf-8',
       'Cache-Control': 'no-store',
       'Set-Cookie': clearStateCookie
@@ -56,6 +65,7 @@ const handleAuth = (url, env) => {
   return new Response(null, {
     status: 302,
     headers: {
+      ...SECURITY_HEADERS,
       Location: authorize.toString(),
       'Set-Cookie': `${STATE_COOKIE}=${state}; Path=/; Max-Age=600; HttpOnly; Secure; SameSite=Lax`
     }

@@ -53,3 +53,26 @@ test('canje exitoso: entrega el token solo al origen permitido', async () => {
   assert.match(html, /authorization:github:success:.*tok/);
   assert.match(html, /const origin = "https:\/\/landingconvierte\.cl"/);
 });
+
+test('callback page: strict CSP with a per-response nonce, no framing, no referrer', async () => {
+  globalThis.fetch = async () => new Response(JSON.stringify({ access_token: 'tok' }), { status: 200 });
+  const res = await worker.fetch(callback(), ENV);
+  const csp = res.headers.get('Content-Security-Policy') || '';
+  const nonce = csp.match(/script-src 'nonce-([A-Za-z0-9+/=_-]+)'/)?.[1];
+  assert.ok(nonce, `CSP sin nonce: ${csp}`);
+  assert.match(csp, /default-src 'none'/);
+  assert.match(csp, /frame-ancestors 'none'/);
+  const html = await res.text();
+  assert.match(html, new RegExp(`<script nonce="${nonce.replace(/[+/=]/g, '\\$&')}">`));
+  assert.equal(res.headers.get('X-Frame-Options'), 'DENY');
+  assert.equal(res.headers.get('Referrer-Policy'), 'no-referrer');
+  assert.equal(res.headers.get('X-Content-Type-Options'), 'nosniff');
+
+  const again = await worker.fetch(callback(), ENV);
+  assert.notEqual(again.headers.get('Content-Security-Policy'), csp, 'el nonce debe cambiar en cada respuesta');
+});
+
+test('auth redirect does not leak the referrer', async () => {
+  const res = await worker.fetch(new Request('https://w.example/auth?provider=github'), ENV);
+  assert.equal(res.headers.get('Referrer-Policy'), 'no-referrer');
+});

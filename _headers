@@ -5,9 +5,10 @@
   Permissions-Policy: camera=(), microphone=(), geolocation=()
   Strict-Transport-Security: max-age=31536000; includeSubDomains
   Cross-Origin-Resource-Policy: same-origin
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-VDVDNNRTREupwUTWnq6itaNdc1TFEVFbXV4xlAS7Gow='; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.web3forms.com; form-action 'self' https://api.web3forms.com; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-VDVDNNRTREupwUTWnq6itaNdc1TFEVFbXV4xlAS7Gow=' https://static.cloudflareinsights.com; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.web3forms.com https://cloudflareinsights.com; form-action 'self' https://api.web3forms.com; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests
 
-# Editor: replaces the site CSP. Only talks to the GitHub API; the login popup is a
+# Site CSP also allows Cloudflare Web Analytics, which Cloudflare injects into HTML pages.
+# Editor: replaces the site CSP (and leaves analytics blocked: the GitHub token lives there). Only talks to the GitHub API; the login popup is a
 # separate window (the OAuth worker), so it needs no CSP entry here.
 /admin/*
   ! Content-Security-Policy

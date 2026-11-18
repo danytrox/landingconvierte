@@ -45,6 +45,7 @@ test('site CSP allows exactly the inline scripts the pages run, and nothing inli
   assert.match(csp, /connect-src[^;]*https:\/\/api\.web3forms\.com/);
   assert.match(csp, /frame-ancestors 'none'/);
   assert.match(csp, /object-src 'none'/);
+  assert.match(csp, /script-src[^;]*https:\/\/static\.cloudflareinsights\.com/, 'Cloudflare Web Analytics inyecta su script');
 });
 
 test('HSTS on every response', () => {
@@ -59,7 +60,7 @@ test('admin replaces the site CSP with its own: GitHub API only, no inline scrip
   assert.match(csp, /script-src 'self'(;|$)/);
   assert.match(csp, /connect-src 'self' https:\/\/api\.github\.com/);
   assert.match(csp, /frame-ancestors 'none'/);
-  assert.doesNotMatch(csp, /unsafe-eval/);
+  assert.doesNotMatch(csp, /unsafe-eval|cloudflareinsights/);
   assert.match(header(admin, 'Cache-Control') || '', /no-store/);
   assert.doesNotMatch(page('admin/index.html'), /<script>(?!<\/script>)/, 'el panel no debe tener scripts inline');
 });

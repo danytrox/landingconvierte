@@ -2,7 +2,7 @@
 import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -80,6 +80,38 @@ test('site.footer.legal: {link} se reemplaza por el enlace de legalLink; sin {li
   const plain = build({ mutate: f => { f.site.footer.legal = 'Sin enlace.'; } });
   assert.equal(plain.status, 0, plain.stderr);
   assert.equal(footerLegal(plain.page('landing-page.html')), 'Sin enlace.');
+});
+
+test('site.footer.legal con {link} sin legalLink: sale con código 1 y mensaje claro', () => {
+  const res = build({ mutate: f => { f.site.footer.legal = '© {year} {link}.'; delete f.site.footer.legalLink; } });
+  assert.equal(res.status, 1);
+  assert.match(res.stderr, /site\.json → footer\.legalLink\.text debe ser un texto/);
+});
+
+test('legalLink y CMS_AUTH_BASE_URL con secuencias $ se escriben literalmente', () => {
+  const res = build({
+    mutate: f => { f.site.footer.legal = 'A {link} B'; f.site.footer.legalLink = { text: "x$'y$&z", href: '/' }; },
+    env: { CMS_AUTH_BASE_URL: 'https://a.example.workers.dev/$&' }
+  });
+  assert.equal(res.status, 0, res.stderr);
+  assert.equal(footerLegal(res.page('index.html')), "A <a href=\"/\">x$'y$&amp;z</a> B");
+  assert.match(res.page('admin/config.yml'), /^\s*base_url: https:\/\/a\.example\.workers\.dev\/\$&$/m);
+});
+
+test('OUT_DIR que apunta al proyecto o a su contenido se rechaza sin borrar nada', () => {
+  // Corre sobre una copia desechable: con el bug presente, el build borraría OUT_DIR.
+  const parent = mkdtempSync(join(tmpdir(), 'build-regressions-'));
+  tmpDirs.push(parent);
+  const sandbox = join(parent, 'project');
+  cpSync(BUILD, join(sandbox, 'build.mjs'));
+  cpSync(join(ROOT, 'content'), join(sandbox, 'content'), { recursive: true });
+  const sandboxBuild = join(sandbox, 'build.mjs');
+  for (const out of [sandbox, join(sandbox, 'content'), parent]) {
+    const res = spawnSync(process.execPath, [sandboxBuild], { env: { ...process.env, OUT_DIR: out }, encoding: 'utf8' });
+    assert.equal(res.status, 1, `OUT_DIR=${out} debió rechazarse`);
+    assert.match(res.stderr, /Error de configuración: OUT_DIR/);
+    assert.ok(existsSync(sandboxBuild) && existsSync(join(sandbox, 'content', 'site.json')), 'no debe borrar archivos');
+  }
 });
 
 test('CMS_AUTH_BASE_URL: se inyecta en dist/admin/config.yml, avisa si falta y rechaza no-https', () => {

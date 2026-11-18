@@ -4,12 +4,22 @@
 // Variables opcionales: CONTENT_DIR (por defecto content/), OUT_DIR (por defecto dist/),
 // CMS_AUTH_BASE_URL (URL https del Worker de login del CMS, se escribe en dist/admin/config.yml).
 import { readFileSync, writeFileSync, mkdirSync, cpSync, existsSync, rmSync } from 'node:fs';
-import { join, dirname, resolve } from 'node:path';
+import { join, dirname, resolve, relative, isAbsolute } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const CONTENT = process.env.CONTENT_DIR ? resolve(process.env.CONTENT_DIR) : join(ROOT, 'content');
 const DIST = process.env.OUT_DIR ? resolve(process.env.OUT_DIR) : join(ROOT, 'dist');
+
+// DIST se borra completo antes de generar: nunca puede ser (ni contener) el proyecto o el contenido.
+const isInside = (child, parent) => {
+  const rel = relative(parent, child);
+  return rel === '' || (!rel.startsWith('..') && !isAbsolute(rel));
+};
+if ([ROOT, CONTENT].some(dir => isInside(dir, DIST))) {
+  console.error(`Error de configuración: OUT_DIR no puede ser ni contener el proyecto o content/ (recibido: ${DIST})`);
+  process.exit(1);
+}
 
 const read = p => JSON.parse(readFileSync(join(CONTENT, p), 'utf8'));
 const site = read('site.json');
@@ -31,6 +41,8 @@ const requireField = (obj, file, path, kind) => {
     contentErrors.push(`${where} debe ser un texto`);
   } else if (kind === 'list' && !Array.isArray(value)) {
     contentErrors.push(`${where} debe ser una lista`);
+  } else if (!['object', 'string', 'list'].includes(kind)) {
+    throw new Error(`requireField: tipo desconocido "${kind}"`);
   }
 };
 const requireAll = (obj, file, kind, paths) => paths.forEach(p => requireField(obj, file, p, kind));
@@ -53,6 +65,7 @@ if (Array.isArray(idx.demo?.examples)) {
   if (idx.demo.examples.length === 0) {
     contentErrors.push('content/index.json → demo.examples debe tener al menos un ejemplo');
   } else {
+    // Solo el primer ejemplo se renderiza en el HTML inicial; el resto viaja en demo-data.
     requireField(idx, 'index.json', 'demo.examples.0.trust', 'list');
   }
 }
@@ -172,7 +185,7 @@ const footerLegal = () => {
   const text = esc(site.footer.legal.replace('{year}', String(year)));
   const link = site.footer.legalLink;
   const html = text.includes('{link}')
-    ? text.replace('{link}', `<a href="${esc(link.href)}">${esc(link.text)}</a>`)
+    ? text.replace('{link}', () => `<a href="${esc(link.href)}">${esc(link.text)}</a>`)
     : text;
   return `<p class="footer-legal">${html}</p>`;
 };
@@ -612,7 +625,12 @@ for (const item of statics) {
 const distCmsConfig = join(DIST, 'admin', 'config.yml');
 if (cmsAuthBaseUrl) {
   const config = readFileSync(distCmsConfig, 'utf8');
-  writeFileSync(distCmsConfig, config.replace(/^(\s*base_url:\s*).*$/m, `$1${cmsAuthBaseUrl}`));
+  const injected = config.replace(/^(\s*base_url:\s*).*$/m, (_, key) => key + cmsAuthBaseUrl);
+  if (!/^\s*base_url:/m.test(config) || injected.includes(CMS_AUTH_PLACEHOLDER)) {
+    console.error('Error de configuración: no se pudo escribir CMS_AUTH_BASE_URL en dist/admin/config.yml (falta la línea base_url).');
+    process.exit(1);
+  }
+  writeFileSync(distCmsConfig, injected);
 } else if (readFileSync(distCmsConfig, 'utf8').includes(CMS_AUTH_PLACEHOLDER)) {
   console.warn('Aviso: CMS_AUTH_BASE_URL no está definida; el login del CMS (/admin) no funcionará hasta configurarla en Cloudflare Pages.');
 }

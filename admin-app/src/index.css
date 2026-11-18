@@ -1,0 +1,123 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Same typeface as the landing (variable width: condensed headings like the site). */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  font-display: swap;
+  src: url('../../fonts/archivo-latin.woff2') format('woff2');
+}
+
+/* Landing tokens (styles.css :root) mapped onto shadcn's variables. Dark only. */
+:root {
+  color-scheme: dark;
+  --noche: #070c1f;
+  --plano: #0b1536;
+  --panel: #0f1a3d;
+  --panel-2: #142250;
+  --tinta: #e9edff;
+  --gris: #9ba7d0;
+  --regla: rgba(150, 170, 255, .16);
+  --regla-fuerte: rgba(150, 170, 255, .34);
+  --neon: #3ce8ff;
+  --neon-deep: #12c9e6;
+  --neon-glow: rgba(60, 232, 255, .45);
+  --violeta: #9b6bff;
+  --sobre-neon: #031220;
+  --error: #ff8a80;
+
+  --radius: 8px;
+  --background: var(--noche);
+  --foreground: var(--tinta);
+  --card: var(--panel);
+  --card-foreground: var(--tinta);
+  --popover: var(--panel);
+  --popover-foreground: var(--tinta);
+  --primary: var(--neon);
+  --primary-foreground: var(--sobre-neon);
+  --secondary: var(--panel-2);
+  --secondary-foreground: var(--tinta);
+  --muted: var(--plano);
+  --muted-foreground: var(--gris);
+  --accent: var(--panel-2);
+  --accent-foreground: var(--tinta);
+  --destructive: var(--error);
+  --border: var(--regla);
+  --input: var(--regla-fuerte);
+  --ring: var(--neon);
+}
+
+@theme inline {
+  --font-sans: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-plano: var(--plano);
+  --color-violeta: var(--violeta);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  body {
+    @apply bg-background text-foreground antialiased;
+    min-height: 100dvh;
+  }
+  ::selection { color: var(--sobre-neon); background: var(--neon); }
+}
+
+/* Condensed display type, as in the landing's h1/h2 */
+.font-display {
+  font-stretch: 72%;
+  font-weight: 800;
+  letter-spacing: -.012em;
+  line-height: 1;
+}
+
+/* Drafting grid of the landing's blueprint surfaces */
+.blueprint {
+  background-color: var(--plano);
+  background-image:
+    radial-gradient(900px 520px at 85% -10%, rgba(155, 107, 255, .16), transparent 60%),
+    radial-gradient(700px 480px at 0% 110%, rgba(60, 232, 255, .10), transparent 60%),
+    linear-gradient(rgba(140, 170, 255, .06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(140, 170, 255, .06) 1px, transparent 1px);
+  background-size: auto, auto, 40px 40px, 40px 40px;
+  background-attachment: fixed;
+}
+
+/* Neon rule under the header, like .site-header::after */
+.neon-rule { position: relative; }
+.neon-rule::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(60, 232, 255, .55) 30%, rgba(155, 107, 255, .45) 70%, transparent);
+}
+
+/* The landing's .btn-signal glow for the one primary action */
+.glow-signal { box-shadow: 0 0 0 1px rgba(60, 232, 255, .4), 0 0 22px var(--neon-glow); }
+.glow-signal:hover:not(:disabled) { background: #7af0ff; box-shadow: 0 0 0 4px rgba(60, 232, 255, .14), 0 0 28px var(--neon-glow); }
+
+.brand-mark { filter: drop-shadow(0 0 6px rgba(60, 232, 255, .45)); }

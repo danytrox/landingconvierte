@@ -1,0 +1,132 @@
+{
+  "meta": {
+    "title": "Diseño de landing pages en Chile | LandingConvierte",
+    "description": "Diseñamos landing pages para negocios en Chile: estructura clara, diseño móvil, formulario de contacto y SEO técnico inicial. Cuéntanos tu objetivo y solicita una propuesta.",
+    "ogTitle": "Diseño de landing pages en Chile | LandingConvierte",
+    "ogDescription": "Diseñamos landing pages para negocios en Chile: estructura clara, diseño móvil, formulario de contacto y SEO técnico inicial.",
+    "ogImageAlt": "LandingConvierte: páginas web para negocios en Chile",
+    "canonical": "https://landingconvierte.cl/landing-page"
+  },
+  "hero": {
+    "title": "Diseño de landing pages para presentar tu oferta y recibir consultas",
+    "lead": "Una landing page ordena una oferta o un servicio en una sola página, clara, adaptada a móviles y enfocada en una acción principal. Las diseñamos para negocios y profesionales en Chile que necesitan explicar qué ofrecen y facilitar el contacto.",
+    "ctaPrimary": "Pedir propuesta",
+    "ctaPrimaryHref": "/#formulario",
+    "ctaSecondary": "Ver todos los servicios",
+    "ctaSecondaryHref": "/#servicios"
+  },
+  "focus": {
+    "heading": "Una página enfocada en un objetivo concreto",
+    "intro": "Una landing sirve cuando quieres presentar una oferta sin dispersar la atención. Su estructura se define según el público, la propuesta y la acción que esperas de tus visitas.",
+    "items": [
+      {
+        "title": "Presentar una oferta",
+        "description": "Explica qué ofreces, para quién es y cuál es el siguiente paso, con la información ordenada de principio a fin."
+      },
+      {
+        "title": "Recibir consultas",
+        "description": "Incluye llamados a la acción claros y un formulario con los campos justos para iniciar la conversación."
+      },
+      {
+        "title": "Apoyar una campaña",
+        "description": "Conecta el mensaje de un anuncio con una página que explica esa misma oferta y facilita el contacto."
+      }
+    ]
+  },
+  "content": {
+    "heading": "Contenido claro antes que trucos de posicionamiento",
+    "intro": "La página se construye para personas: debe responder sus dudas y ayudarles a decidir, no repetir palabras clave sin contexto.",
+    "columns": [
+      {
+        "title": "Elementos de una landing page",
+        "items": [
+          "Un encabezado que describe el servicio y el público.",
+          "Una explicación concreta de la oferta y sus beneficios reales.",
+          "Información sobre el proceso y qué debe preparar el cliente.",
+          "Un formulario o llamada a la acción visible.",
+          "Una experiencia legible en teléfono y computador."
+        ]
+      },
+      {
+        "title": "Base SEO inicial",
+        "items": [
+          "Title y meta description propios.",
+          "Un H1 descriptivo y subtítulos ordenados.",
+          "Contenido HTML rastreable y enlaces internos útiles.",
+          "URL canonical, sitemap y robots.txt coherentes.",
+          "Datos estructurados que describen lo visible y comprobable."
+        ]
+      }
+    ]
+  },
+  "compare": {
+    "heading": "¿Landing page o sitio web completo?",
+    "columns": [
+      {
+        "title": "Elige una landing page si…",
+        "description": "Tu prioridad es explicar una oferta específica y orientar a una consulta o acción principal."
+      },
+      {
+        "title": "Elige un sitio web de servicios si…",
+        "description": "Necesitas organizar varios servicios, presentar información del negocio y atender distintas búsquedas e intenciones."
+      }
+    ],
+    "noteBefore": "Si no tienes claro cuál conviene,",
+    "noteLinkText": "cuéntanos qué ofrece tu negocio",
+    "noteLinkHref": "/#formulario",
+    "noteAfter": "y qué quieres lograr."
+  },
+  "process": {
+    "heading": "Del objetivo a una página lista para publicar",
+    "steps": [
+      {
+        "title": "Conversamos",
+        "description": "Revisamos el servicio, el público y la acción que quieres priorizar."
+      },
+      {
+        "title": "Ordenamos y diseñamos",
+        "description": "Definimos la estructura de la información y una presentación adaptada a móviles."
+      },
+      {
+        "title": "Revisamos y publicamos",
+        "description": "Comprobamos enlaces y formulario, y coordinamos la publicación con tu dominio."
+      }
+    ]
+  },
+  "faq": {
+    "heading": "Preguntas sobre landing pages",
+    "items": [
+      {
+        "question": "¿Una landing page garantiza aparecer primera en Google?",
+        "answer": "No. Una estructura clara ayuda a los buscadores a entender el contenido, pero nadie puede garantizar una posición. Influyen la competencia, la utilidad del contenido, las referencias de otros sitios y el tiempo."
+      },
+      {
+        "question": "¿La página se adapta a celulares?",
+        "answer": "Sí. El diseño contempla una presentación responsive para que el contenido y las acciones se puedan usar desde teléfonos y computadores."
+      },
+      {
+        "question": "¿Cuánto cuesta una landing page?",
+        "answer": "El valor depende del alcance y las funciones del proyecto. La propuesta se define después de conocer el objetivo y las necesidades del negocio."
+      },
+      {
+        "question": "¿Qué información debo preparar?",
+        "answer": "Una descripción del negocio, el servicio que quieres presentar, a quién quieres llegar y el medio de contacto que prefieres. Si tienes logo, textos o imágenes, puedes mencionarlos al solicitar la propuesta."
+      }
+    ]
+  },
+  "ctaBand": {
+    "heading": "Cuéntanos qué necesitas presentar",
+    "textBefore": "Pide una propuesta para tu landing page o revisa los otros",
+    "linkText": "servicios de diseño web",
+    "linkHref": "/#servicios",
+    "cta": "Pedir propuesta",
+    "ctaHref": "/#formulario"
+  },
+  "schema": {
+    "pageDescription": "Diseñamos landing pages para negocios en Chile: estructura clara, diseño móvil, formulario de contacto y SEO técnico inicial.",
+    "serviceName": "Diseño de landing pages para negocios",
+    "serviceType": "Diseño de landing pages",
+    "serviceDescription": "Páginas de aterrizaje con una oferta clara, una estructura orientada a una acción y formulario de contacto.",
+    "breadcrumbName": "Diseño de landing pages"
+  }
+}

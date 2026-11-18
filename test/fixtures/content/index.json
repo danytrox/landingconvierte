@@ -1,0 +1,248 @@
+{
+  "meta": {
+    "title": "Diseño de páginas web en Chile para negocios | LandingConvierte",
+    "description": "Diseño de páginas web y landing pages para negocios en Chile. Sitios adaptados a móviles, con formulario de contacto y publicación en tu dominio. Cuéntanos tu idea.",
+    "ogTitle": "Diseño de páginas web en Chile | LandingConvierte",
+    "ogDescription": "Diseño de páginas web y landing pages para negocios en Chile. Sitios adaptados a móviles, con formulario de contacto y publicación en tu dominio.",
+    "ogImageAlt": "LandingConvierte: páginas web para negocios en Chile",
+    "canonical": "https://landingconvierte.cl/"
+  },
+  "hero": {
+    "title": "Páginas web para negocios en Chile, hechas para que te escriban.",
+    "lead": "Diseñamos landing pages y sitios web para negocios y profesionales que necesitan explicar bien lo que hacen y recibir consultas. Adaptados a móviles, con formulario de contacto y publicados en tu dominio.",
+    "ctaPrimary": "Pedir propuesta",
+    "ctaPrimaryHref": "#formulario",
+    "ctaSecondary": "Ver cómo trabajamos",
+    "ctaSecondaryHref": "#proceso",
+    "note": "Sin compromiso: primero conversamos el alcance, después decides."
+  },
+  "demo": {
+    "prompt": "Elige un rubro y mira el plano de su página:",
+    "caption": "Ejemplo ilustrativo. La tuya se escribe con los datos reales de tu negocio.",
+    "legend": [
+      "Un titular que dice qué haces y dónde.",
+      "Un solo botón, con la acción que te importa.",
+      "Razones concretas para confiar en ti."
+    ],
+    "examples": [
+      {
+        "key": "dental",
+        "label": "Clínica dental",
+        "accent": "#0e8f7e",
+        "url": "tuclinica.cl",
+        "brand": "Tu clínica dental",
+        "title": "Ortodoncia y limpieza dental en Providencia",
+        "sub": "Pide tu evaluación y te confirmamos la hora el mismo día.",
+        "cta": "Agendar evaluación",
+        "trust": [
+          "Atención de lunes a sábado",
+          "Presupuesto por escrito antes de empezar"
+        ]
+      },
+      {
+        "key": "cafe",
+        "label": "Cafetería",
+        "accent": "#b4471f",
+        "url": "tucafeteria.cl",
+        "brand": "Tu cafetería",
+        "title": "Café de especialidad y pastelería en Valparaíso",
+        "sub": "Reserva una mesa o encarga tu torta para retirar.",
+        "cta": "Reservar mesa",
+        "trust": [
+          "Abierto todos los días desde las 8:30",
+          "Opciones sin gluten y veganas"
+        ]
+      },
+      {
+        "key": "contable",
+        "label": "Estudio contable",
+        "accent": "#5b3fc4",
+        "url": "tuestudio.cl",
+        "brand": "Tu estudio contable",
+        "title": "Contabilidad mensual para pymes y emprendedores",
+        "sub": "Impuestos, remuneraciones y patente al día, sin perseguir papeles.",
+        "cta": "Pedir cotización",
+        "trust": [
+          "Un contador asignado a tu empresa",
+          "Reporte mensual fácil de leer"
+        ]
+      },
+      {
+        "key": "gasfiter",
+        "label": "Gasfitería",
+        "accent": "#c2410c",
+        "url": "tugasfiter.cl",
+        "brand": "Tu servicio de gasfitería",
+        "title": "Gasfíter a domicilio en Santiago",
+        "sub": "Fugas, calefont y destapes. Cuéntanos el problema y coordinamos la visita.",
+        "cta": "Pedir visita",
+        "trust": [
+          "Presupuesto antes de comenzar",
+          "Garantía por escrito del trabajo"
+        ]
+      }
+    ]
+  },
+  "services": {
+    "heading": "Lo que diseñamos",
+    "intro": "Partimos por lo que tu negocio necesita decir, no por una plantilla llena de funciones que nadie va a usar.",
+    "items": [
+      {
+        "title": "Landing page",
+        "description": "Una sola página enfocada en una oferta y en una acción: que te escriban, que agenden o que pidan una cotización.",
+        "linkText": "Cómo la planteamos",
+        "linkHref": "/landing-page"
+      },
+      {
+        "title": "Sitio web para servicios",
+        "description": "Varias secciones para ordenar tus servicios, tu equipo, tu portafolio y las formas de contactarte.",
+        "linkText": "¿Cuál me conviene?",
+        "linkHref": "#elige-pagina"
+      },
+      {
+        "title": "Rediseño y optimización",
+        "description": "Si ya tienes una página, la ordenamos, la hacemos cargar rápido y la dejamos cómoda de usar en el teléfono.",
+        "linkText": "Cuéntanos qué tienes",
+        "linkHref": "#formulario"
+      }
+    ],
+    "includedTitle": "Toda página que entregamos incluye",
+    "included": [
+      "Diseño adaptado a teléfono, tablet y computador",
+      "Formulario de contacto que llega a tu correo",
+      "Publicación en tu propio dominio",
+      "Base SEO: títulos, descripciones, sitemap y datos estructurados"
+    ]
+  },
+  "compare": {
+    "heading": "¿Landing page o sitio web?",
+    "intro": "Depende de cuántas cosas ofreces y de qué esperas que haga quien te visita.",
+    "columns": [
+      {
+        "title": "Landing page",
+        "rows": [
+          {
+            "term": "Sirve para",
+            "description": "Presentar una oferta o un servicio concreto."
+          },
+          {
+            "term": "Qué contiene",
+            "description": "Una página con la propuesta, las razones para confiar y un formulario."
+          },
+          {
+            "term": "Te conviene si",
+            "description": "Quieres guiar a las personas hacia una consulta, o vas a hacer una campaña."
+          }
+        ],
+        "linkText": "Ver diseño de landing pages",
+        "linkHref": "/landing-page"
+      },
+      {
+        "title": "Sitio web de servicios",
+        "rows": [
+          {
+            "term": "Sirve para",
+            "description": "Mostrar el negocio completo y todo lo que ofrece."
+          },
+          {
+            "term": "Qué contiene",
+            "description": "Varias secciones o páginas: servicios, quiénes somos, portafolio y contacto."
+          },
+          {
+            "term": "Te conviene si",
+            "description": "Tienes varios servicios y tus clientes llegan buscando cosas distintas."
+          }
+        ],
+        "linkText": "Pedir propuesta",
+        "linkHref": "#formulario"
+      }
+    ],
+    "noteBefore": "¿No sabes cuál elegir?",
+    "noteLinkText": "Cuéntanos qué ofrece tu negocio",
+    "noteLinkHref": "#formulario",
+    "noteAfter": "y te decimos qué formato calza mejor."
+  },
+  "process": {
+    "heading": "De la idea a tu página publicada",
+    "steps": [
+      {
+        "title": "Conversamos",
+        "description": "Entendemos tu negocio, a tus clientes y qué quieres conseguir con la página."
+      },
+      {
+        "title": "Diseñamos",
+        "description": "Armamos una propuesta visual con tus textos y la ajustamos contigo."
+      },
+      {
+        "title": "Publicamos",
+        "description": "Probamos los enlaces y el formulario, y dejamos la página funcionando en tu dominio."
+      }
+    ]
+  },
+  "faq": {
+    "heading": "Preguntas frecuentes",
+    "items": [
+      {
+        "question": "¿Qué diferencia hay entre una landing page y un sitio web?",
+        "answer": "Una landing page concentra una oferta y una acción principal. Un sitio web de servicios organiza varias áreas del negocio y puede tener diferentes secciones o páginas."
+      },
+      {
+        "question": "¿La página puede aparecer primera en Google?",
+        "answer": "Nadie puede garantizar una posición específica. Configuramos una base técnica y contenido claro para que los buscadores entiendan el sitio; el posicionamiento también depende de la competencia, la utilidad del contenido, las menciones y el tiempo."
+      },
+      {
+        "question": "¿Qué incluye la base SEO?",
+        "answer": "Títulos y descripciones, encabezados descriptivos, enlaces rastreables, canonical, sitemap, robots.txt y datos estructurados coherentes con el contenido. Esto facilita el rastreo y la comprensión, pero no garantiza indexación ni posiciones."
+      },
+      {
+        "question": "¿La página se ve bien en celulares?",
+        "answer": "Sí. Cada página se diseña primero para teléfono y se revisa también en tablet y computador, para que el contenido y el formulario se puedan usar en cualquier pantalla."
+      },
+      {
+        "question": "¿Cuánto cuesta una página web?",
+        "answer": "El valor depende del alcance y las funciones del proyecto. La propuesta se define después de conocer el objetivo y las necesidades del negocio."
+      },
+      {
+        "question": "¿Qué información necesito para pedir una propuesta?",
+        "answer": "Cuéntanos qué hace tu negocio, qué servicio quieres presentar, a quién quieres llegar y qué acción esperas de tus visitas. Con eso podemos conversar sobre el alcance."
+      }
+    ]
+  },
+  "contact": {
+    "heading": "Pide una propuesta para tu página",
+    "intro": "Cuéntanos qué hace tu negocio y qué quieres lograr. Te respondemos con una idea inicial, el alcance y los próximos pasos.",
+    "bullets": [
+      "Respuesta clara y sin compromiso",
+      "El alcance se define contigo antes de partir",
+      "Usamos tus datos solo para responderte"
+    ],
+    "web3formsAccessKey": "583e9e8a-e418-40a8-82af-af64e8715366",
+    "subject": "Nueva consulta desde LandingConvierte",
+    "fromName": "LandingConvierte",
+    "labels": {
+      "name": "Nombre",
+      "email": "Correo",
+      "company": "Negocio o marca",
+      "companyOptional": "(opcional)",
+      "phone": "Teléfono o WhatsApp",
+      "phoneOptional": "(opcional)",
+      "service": "¿Qué necesitas?",
+      "message": "Cuéntanos brevemente",
+      "messagePlaceholder": "¿Qué hace tu negocio y qué te gustaría lograr con la página?",
+      "submit": "Pedir propuesta"
+    },
+    "serviceOptions": [
+      "Landing page",
+      "Sitio web para servicios",
+      "Rediseño de una página existente",
+      "Todavía no lo sé"
+    ]
+  },
+  "actionBar": "Pedir propuesta",
+  "schema": {
+    "pageDescription": "Diseño de páginas web y landing pages para negocios en Chile. Sitios adaptados a móviles, con formulario de contacto y publicación en tu dominio.",
+    "serviceName": "Diseño de páginas web para negocios",
+    "serviceType": "Diseño web",
+    "serviceDescription": "Sitios web para negocios de servicios: servicios, equipo, portafolio y formas de contacto, adaptados a móviles y publicados en el dominio del cliente."
+  }
+}

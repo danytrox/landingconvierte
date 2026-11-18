@@ -44,6 +44,10 @@ before(() => {
     if (SKIP_COPY.has(entry)) continue;
     cpSync(join(REPO, entry), join(work, entry), { recursive: true });
   }
+  // The live content/ changes whenever someone publishes from the editor; the equivalence
+  // check pins the template output, so it builds from a frozen copy of the original content.
+  rmSync(join(work, 'content'), { recursive: true, force: true });
+  cpSync(join(REPO, 'test', 'fixtures', 'content'), join(work, 'content'), { recursive: true });
   result = spawnSync(process.execPath, ['build.mjs'], { cwd: work, encoding: 'utf8' });
 });
 

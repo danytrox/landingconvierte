@@ -2,7 +2,7 @@
 import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -95,7 +95,7 @@ test('legalLink y CMS_AUTH_BASE_URL con secuencias $ se escriben literalmente', 
   });
   assert.equal(res.status, 0, res.stderr);
   assert.equal(footerLegal(res.page('index.html')), "A <a href=\"/\">x$'y$&amp;z</a> B");
-  assert.match(res.page('admin/config.yml'), /^\s*base_url: https:\/\/a\.example\.workers\.dev\/\$&$/m);
+  assert.equal(JSON.parse(res.page('admin/config.json')).authBaseUrl, 'https://a.example.workers.dev/$&');
 });
 
 test('OUT_DIR que apunta al proyecto o a su contenido se rechaza sin borrar nada', () => {
@@ -114,20 +114,73 @@ test('OUT_DIR que apunta al proyecto o a su contenido se rechaza sin borrar nada
   }
 });
 
-test('CMS_AUTH_BASE_URL: se inyecta en dist/admin/config.yml, avisa si falta y rechaza no-https', () => {
+test('CMS_AUTH_BASE_URL: se escribe en dist/admin/config.json, avisa si falta y rechaza no-https', () => {
   const url = 'https://x.example.workers.dev';
   const set = build({ env: { CMS_AUTH_BASE_URL: url } });
   assert.equal(set.status, 0, set.stderr);
-  const config = set.page('admin/config.yml');
-  assert.match(config, /^\s*base_url: https:\/\/x\.example\.workers\.dev$/m);
-  assert.doesNotMatch(config, /REPLACE_WITH_ACCOUNT/);
-  assert.match(readFileSync(join(ROOT, 'admin/config.yml'), 'utf8'), /REPLACE_WITH_ACCOUNT/);
+  assert.deepEqual(JSON.parse(set.page('admin/config.json')), { authBaseUrl: url });
+  assert.ok(set.page('admin/index.html').length > 0, 'falta el panel compilado en dist/admin');
 
   const unset = build();
   assert.equal(unset.status, 0, unset.stderr);
   assert.match(unset.stdout + unset.stderr, /Aviso: .*CMS_AUTH_BASE_URL/);
+  assert.deepEqual(JSON.parse(unset.page('admin/config.json')), { authBaseUrl: null });
 
   const bad = build({ env: { CMS_AUTH_BASE_URL: 'http://x.example.workers.dev' } });
   assert.equal(bad.status, 1);
   assert.match(bad.stderr, /CMS_AUTH_BASE_URL/);
+});
+
+test('CMS_AUTH_BASE_URL falta en el build de producción de Cloudflare (main): sale con código 1', () => {
+  const prod = build({ env: { CF_PAGES: '1', CF_PAGES_BRANCH: 'main' } });
+  assert.equal(prod.status, 1);
+  assert.match(prod.stderr, /Error de configuración: CMS_AUTH_BASE_URL es obligatoria/);
+
+  const preview = build({ env: { CF_PAGES: '1', CF_PAGES_BRANCH: 'feat/x' } });
+  assert.equal(preview.status, 0, preview.stderr);
+  assert.match(preview.stdout + preview.stderr, /Aviso: .*CMS_AUTH_BASE_URL/);
+});
+
+test('texto obligatorio faltante dentro de una lista: sale con código 1 y nombra el campo', () => {
+  const res = build({ mutate: f => {
+    delete f.site.nav[1].href;
+    delete f.index.contact.web3formsAccessKey;
+    delete f.index.compare.columns[0].rows[0].term;
+  } });
+  assert.equal(res.status, 1);
+  assert.match(res.stderr, /Error de contenido: content\/site\.json → nav\.1\.href debe ser un texto/);
+  assert.match(res.stderr, /content\/index\.json → contact\.web3formsAccessKey debe ser un texto/);
+  assert.match(res.stderr, /content\/index\.json → compare\.columns\.0\.rows\.0\.term debe ser un texto/);
+  assert.doesNotMatch(res.stderr, /TypeError|\n\s+at /);
+});
+
+test('OUT_DIR ajeno no vacío se rechaza sin borrar; vacío o generado por el build se reemplaza', () => {
+  // Todo ocurre dentro de un sandbox temporal: nunca contra el repo ni un directorio real.
+  const parent = mkdtempSync(join(tmpdir(), 'build-regressions-'));
+  tmpDirs.push(parent);
+  const sandbox = join(parent, 'project');
+  for (const entry of readdirSync(ROOT)) {
+    if (['.git', 'dist', 'node_modules', 'test', '.playwright-mcp', '.atl'].includes(entry)) continue;
+    cpSync(join(ROOT, entry), join(sandbox, entry), { recursive: true });
+  }
+  const run = out => spawnSync(process.execPath, [join(sandbox, 'build.mjs')], {
+    env: { ...process.env, CMS_AUTH_BASE_URL: '', OUT_DIR: out }, encoding: 'utf8'
+  });
+
+  const foreign = join(parent, 'foreign');
+  mkdirSync(foreign);
+  writeFileSync(join(foreign, 'keep.txt'), 'importante');
+  const rejected = run(foreign);
+  assert.equal(rejected.status, 1);
+  assert.match(rejected.stderr, /Error de configuración: OUT_DIR/);
+  assert.equal(readFileSync(join(foreign, 'keep.txt'), 'utf8'), 'importante');
+
+  const empty = join(parent, 'empty');
+  mkdirSync(empty);
+  assert.equal(run(empty).status, 0);
+  writeFileSync(join(empty, 'stale.txt'), 'viejo');
+  const again = run(empty);
+  assert.equal(again.status, 0, again.stderr);
+  assert.ok(existsSync(join(empty, 'index.html')));
+  assert.ok(!existsSync(join(empty, 'stale.txt')), 'una salida previa del build se reemplaza completa');
 });

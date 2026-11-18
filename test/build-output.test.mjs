@@ -1,7 +1,11 @@
 // Safety net for the content-driven build: `node build.mjs` must produce pages
 // equivalent to the hand-written originals (test/fixtures/original-*.html) and a
 // dist/ that only holds files meant to be published.
+// The fixtures are the original hand-written pages plus one intentional change:
+// the footer legal text links to the home page on both pages (original-index.html
+// line ~390), requested after the CMS migration.
 // Runs the build in a temporary copy of the repo, never in the repo's own dist/.
+// Needs the compiled admin panel (admin-app/dist): run `npm run build` first.
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
@@ -20,13 +24,15 @@ const SKIP_COPY = new Set(['.git', 'dist', 'node_modules', '.playwright-mcp', '.
 const PUBLISHED = new Set([
   'index.html', 'landing-page.html',
   '404.html', '_headers', 'favicon.svg', 'apple-touch-icon.png', 'logo.png', 'og-image.png',
-  'robots.txt', 'sitemap.xml', 'site.webmanifest', 'styles.css', 'main.js', 'fonts', 'admin', 'uploads'
+  'robots.txt', 'sitemap.xml', 'site.webmanifest', 'styles.css', 'main.js', 'fonts', 'admin', 'uploads',
+  // marker that lets build.mjs recognize (and safely replace) its own output
+  '.landingconvierte-build'
 ]);
 
 // Root-only files that must never be published.
 const NEVER_PUBLISHED = [
   'build.mjs', 'content', 'worker', 'test', 'package.json', 'README_DEPLOY.md',
-  'TODO_FORM_SPAM.md', '.github', '.gitignore', '.git'
+  'TODO_FORM_SPAM.md', '.github', '.gitignore', '.git', 'admin-app', 'package-lock.json', 'node_modules'
 ];
 
 let work;
@@ -124,9 +130,13 @@ test('dist/landing-page.html is equivalent to the original landing-page.html', (
   assertEquivalent('original-landing-page.html', dist('landing-page.html'));
 });
 
-test('publishes the CMS admin panel', () => {
+test('publishes the admin panel with its login config and no third-party scripts', () => {
   assert.ok(existsSync(dist('admin', 'index.html')), 'dist/admin/index.html missing');
-  assert.ok(existsSync(dist('admin', 'config.yml')), 'dist/admin/config.yml missing');
+  assert.ok(existsSync(dist('admin', 'config.json')), 'dist/admin/config.json missing');
+  const html = readFileSync(dist('admin', 'index.html'), 'utf8');
+  const srcs = [...html.matchAll(/<script[^>]*\ssrc="([^"]+)"/g)].map(m => m[1]);
+  assert.ok(srcs.length > 0, 'admin index.html loads no script');
+  for (const src of srcs) assert.match(src, /^\/admin\//, `admin loads a non-local script: ${src}`);
 });
 
 test('dist/ holds only publishable files', () => {

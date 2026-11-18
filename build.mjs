@@ -2,14 +2,19 @@
 // Genera dist/ a partir de content/*.json + archivos estáticos.
 // Uso: node build.mjs
 // Variables opcionales: CONTENT_DIR (por defecto content/), OUT_DIR (por defecto dist/),
-// CMS_AUTH_BASE_URL (URL https del Worker de login del CMS, se escribe en dist/admin/config.yml).
-import { readFileSync, writeFileSync, mkdirSync, cpSync, existsSync, rmSync } from 'node:fs';
+// CMS_AUTH_BASE_URL (URL https del Worker de login del panel, se escribe en dist/admin/config.json).
+// El panel /admin se compila antes con `npm run build:admin` (admin-app/ → admin-app/dist/).
+import { readFileSync, writeFileSync, mkdirSync, cpSync, existsSync, rmSync, readdirSync } from 'node:fs';
 import { join, dirname, resolve, relative, isAbsolute } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const CONTENT = process.env.CONTENT_DIR ? resolve(process.env.CONTENT_DIR) : join(ROOT, 'content');
-const DIST = process.env.OUT_DIR ? resolve(process.env.OUT_DIR) : join(ROOT, 'dist');
+const DEFAULT_DIST = join(ROOT, 'dist');
+const DIST = process.env.OUT_DIR ? resolve(process.env.OUT_DIR) : DEFAULT_DIST;
+const ADMIN_BUILD = join(ROOT, 'admin-app', 'dist');
+// Marca que deja cada build en su salida: solo se borra un OUT_DIR que la tenga.
+const BUILD_MARKER = '.landingconvierte-build';
 
 // DIST se borra completo antes de generar: nunca puede ser (ni contener) el proyecto o el contenido.
 const isInside = (child, parent) => {
@@ -19,6 +24,18 @@ const isInside = (child, parent) => {
 if ([ROOT, CONTENT].some(dir => isInside(dir, DIST))) {
   console.error(`Error de configuración: OUT_DIR no puede ser ni contener el proyecto o content/ (recibido: ${DIST})`);
   process.exit(1);
+}
+// Fuera de dist/ por defecto, solo se borra un directorio vacío o uno generado antes por este build.
+if (DIST !== DEFAULT_DIST && existsSync(DIST)) {
+  let entries = [];
+  try { entries = readdirSync(DIST); } catch {
+    console.error(`Error de configuración: OUT_DIR debe ser un directorio (recibido: ${DIST})`);
+    process.exit(1);
+  }
+  if (entries.length && !entries.includes(BUILD_MARKER)) {
+    console.error(`Error de configuración: OUT_DIR ya existe, no está vacío y no es una salida de este build; no se borrará (recibido: ${DIST})`);
+    process.exit(1);
+  }
 }
 
 const read = p => JSON.parse(readFileSync(join(CONTENT, p), 'utf8'));
@@ -47,9 +64,25 @@ const requireField = (obj, file, path, kind) => {
 };
 const requireAll = (obj, file, kind, paths) => paths.forEach(p => requireField(obj, file, p, kind));
 
+// Textos de cada elemento de una lista: fields = null para listas de textos.
+const requireEach = (obj, file, listPath, fields) => {
+  const list = getPath(obj, listPath);
+  if (!Array.isArray(list)) return;
+  list.forEach((_, i) => {
+    if (fields === null) requireField(obj, file, `${listPath}.${i}`, 'string');
+    else requireAll(obj, file, 'string', fields.map(f => `${listPath}.${i}.${f}`));
+  });
+};
+const META = ['title', 'description', 'ogTitle', 'ogDescription', 'ogImageAlt', 'canonical'].map(f => `meta.${f}`);
+
 requireAll(site, 'site.json', 'object', ['footer']);
-requireAll(site, 'site.json', 'string', ['navCtaHref', 'footer.legal']);
+requireAll(site, 'site.json', 'string', [
+  'brand', 'alternateName', 'domain', 'organizationDescription', 'areaServed', 'themeColor', 'skipLink',
+  'navCta', 'navCtaHref', 'footer.brand', 'footer.legal'
+]);
 requireAll(site, 'site.json', 'list', ['nav', 'footer.links']);
+requireEach(site, 'site.json', 'nav', ['label', 'href']);
+requireEach(site, 'site.json', 'footer.links', ['label', 'href']);
 if (typeof site.footer?.legal === 'string' && site.footer.legal.includes('{link}')) {
   requireAll(site, 'site.json', 'string', ['footer.legalLink.text', 'footer.legalLink.href']);
 }
@@ -61,12 +94,38 @@ requireAll(idx, 'index.json', 'list', [
   'demo.examples', 'demo.legend', 'services.items', 'services.included', 'compare.columns',
   'process.steps', 'faq.items', 'contact.bullets', 'contact.serviceOptions'
 ]);
+requireAll(idx, 'index.json', 'string', [
+  ...META,
+  ...['title', 'lead', 'ctaPrimary', 'ctaPrimaryHref', 'ctaSecondary', 'ctaSecondaryHref', 'note'].map(f => `hero.${f}`),
+  'demo.prompt', 'demo.caption',
+  'services.heading', 'services.intro', 'services.includedTitle',
+  ...['heading', 'intro', 'noteBefore', 'noteLinkText', 'noteLinkHref', 'noteAfter'].map(f => `compare.${f}`),
+  'process.heading', 'faq.heading',
+  ...['heading', 'intro', 'subject', 'fromName', 'web3formsAccessKey'].map(f => `contact.${f}`),
+  ...['name', 'email', 'company', 'companyOptional', 'phone', 'phoneOptional', 'service', 'message',
+    'messagePlaceholder', 'submit'].map(f => `contact.labels.${f}`),
+  'actionBar',
+  ...['pageDescription', 'serviceName', 'serviceType', 'serviceDescription'].map(f => `schema.${f}`)
+]);
+requireEach(idx, 'index.json', 'demo.legend', null);
+requireEach(idx, 'index.json', 'demo.examples', ['key', 'label', 'accent', 'url', 'brand', 'title', 'sub', 'cta']);
+requireEach(idx, 'index.json', 'services.items', ['title', 'description', 'linkText', 'linkHref']);
+requireEach(idx, 'index.json', 'services.included', null);
+requireEach(idx, 'index.json', 'compare.columns', ['title', 'linkText', 'linkHref']);
+(Array.isArray(idx.compare?.columns) ? idx.compare.columns : []).forEach((_, i) => {
+  requireField(idx, 'index.json', `compare.columns.${i}.rows`, 'list');
+  requireEach(idx, 'index.json', `compare.columns.${i}.rows`, ['term', 'description']);
+});
+requireEach(idx, 'index.json', 'process.steps', ['title', 'description']);
+requireEach(idx, 'index.json', 'faq.items', ['question', 'answer']);
+requireEach(idx, 'index.json', 'contact.bullets', null);
+requireEach(idx, 'index.json', 'contact.serviceOptions', null);
 if (Array.isArray(idx.demo?.examples)) {
   if (idx.demo.examples.length === 0) {
     contentErrors.push('content/index.json → demo.examples debe tener al menos un ejemplo');
   } else {
     // Solo el primer ejemplo se renderiza en el HTML inicial; el resto viaja en demo-data.
-    requireField(idx, 'index.json', 'demo.examples.0.trust', 'list');
+    idx.demo.examples.forEach((_, i) => requireField(idx, 'index.json', `demo.examples.${i}.trust`, 'list'));
   }
 }
 
@@ -76,15 +135,32 @@ requireAll(lp, 'landing-page.json', 'object', [
 requireAll(lp, 'landing-page.json', 'list', [
   'focus.items', 'content.columns', 'compare.columns', 'process.steps', 'faq.items'
 ]);
+requireAll(lp, 'landing-page.json', 'string', [
+  ...META,
+  ...['title', 'lead', 'ctaPrimary', 'ctaPrimaryHref', 'ctaSecondary', 'ctaSecondaryHref'].map(f => `hero.${f}`),
+  'focus.heading', 'focus.intro', 'content.heading', 'content.intro',
+  ...['heading', 'noteBefore', 'noteLinkText', 'noteLinkHref', 'noteAfter'].map(f => `compare.${f}`),
+  'process.heading', 'faq.heading',
+  ...['heading', 'textBefore', 'linkText', 'linkHref', 'cta', 'ctaHref'].map(f => `ctaBand.${f}`),
+  ...['pageDescription', 'serviceName', 'serviceType', 'serviceDescription', 'breadcrumbName'].map(f => `schema.${f}`)
+]);
+requireEach(lp, 'landing-page.json', 'focus.items', ['title', 'description']);
+requireEach(lp, 'landing-page.json', 'content.columns', ['title']);
+(Array.isArray(lp.content?.columns) ? lp.content.columns : []).forEach((_, i) => {
+  requireField(lp, 'landing-page.json', `content.columns.${i}.items`, 'list');
+  requireEach(lp, 'landing-page.json', `content.columns.${i}.items`, null);
+});
+requireEach(lp, 'landing-page.json', 'compare.columns', ['title', 'description']);
+requireEach(lp, 'landing-page.json', 'process.steps', ['title', 'description']);
+requireEach(lp, 'landing-page.json', 'faq.items', ['question', 'answer']);
 
 if (contentErrors.length) {
   for (const e of contentErrors) console.error(`Error de contenido: ${e}`);
   process.exit(1);
 }
 
-// ---------- URL del login del CMS ----------
+// ---------- URL del login del panel /admin ----------
 
-const CMS_AUTH_PLACEHOLDER = 'REPLACE_WITH_ACCOUNT';
 const cmsAuthBaseUrl = process.env.CMS_AUTH_BASE_URL?.trim();
 if (cmsAuthBaseUrl) {
   let valid = false;
@@ -93,6 +169,15 @@ if (cmsAuthBaseUrl) {
     console.error(`Error de configuración: CMS_AUTH_BASE_URL debe ser una URL https:// (recibido: ${cmsAuthBaseUrl})`);
     process.exit(1);
   }
+} else if (process.env.CF_PAGES === '1' && process.env.CF_PAGES_BRANCH === 'main') {
+  // En producción un panel sin login no sirve: mejor que el deploy falle a que quede roto en silencio.
+  console.error('Error de configuración: CMS_AUTH_BASE_URL es obligatoria en el build de producción (Cloudflare Pages, rama main). Defínela en Settings → Environment variables.');
+  process.exit(1);
+}
+
+if (!existsSync(join(ADMIN_BUILD, 'index.html'))) {
+  console.error('Error de configuración: falta el panel compilado (admin-app/dist). Corre `npm run build` (o `npm run build:admin` antes de `node build.mjs`).');
+  process.exit(1);
 }
 
 const esc = s => String(s)
@@ -182,10 +267,10 @@ ${nav.map(item => {
 // Texto legal del pie, igual en todas las páginas ({year} = año actual,
 // {link} = enlace definido en site.footer.legalLink)
 const footerLegal = () => {
-  const text = esc(site.footer.legal.replace('{year}', String(year)));
+  const text = esc(site.footer.legal.replaceAll('{year}', String(year)));
   const link = site.footer.legalLink;
   const html = text.includes('{link}')
-    ? text.replace('{link}', () => `<a href="${esc(link.href)}">${esc(link.text)}</a>`)
+    ? text.replaceAll('{link}', () => `<a href="${esc(link.href)}">${esc(link.text)}</a>`)
     : text;
   return `<p class="footer-legal">${html}</p>`;
 };
@@ -487,6 +572,9 @@ const lpLd = escJson({
   ]
 });
 
+// Pie de esta página: siempre muestra "Inicio" fijo primero y omite los enlaces de
+// site.footer.links que apuntan a "/" o a "/landing-page": repetirían "Inicio" o
+// enlazarían a la página actual. El panel /admin lo avisa junto a "Enlaces" del pie.
 const landingHtml = `${head(lp.meta, lpLd)}
 ${header(site.nav, '/', '/landing-page')}
   <main id="contenido">
@@ -608,7 +696,7 @@ writeFileSync(join(DIST, 'landing-page.html'), landingHtml);
 
 const statics = [
   '404.html', '_headers', 'favicon.svg', 'apple-touch-icon.png', 'logo.png', 'og-image.png',
-  'robots.txt', 'sitemap.xml', 'site.webmanifest', 'styles.css', 'main.js', 'fonts', 'admin'
+  'robots.txt', 'sitemap.xml', 'site.webmanifest', 'styles.css', 'main.js', 'fonts'
 ];
 const optional = new Set(['uploads']);
 statics.push(...optional);
@@ -621,18 +709,12 @@ for (const item of statics) {
   cpSync(src, join(DIST, item), { recursive: true });
 }
 
-// La URL del Worker se inyecta solo en dist/; admin/config.yml conserva el marcador.
-const distCmsConfig = join(DIST, 'admin', 'config.yml');
-if (cmsAuthBaseUrl) {
-  const config = readFileSync(distCmsConfig, 'utf8');
-  const injected = config.replace(/^(\s*base_url:\s*).*$/m, (_, key) => key + cmsAuthBaseUrl);
-  if (!/^\s*base_url:/m.test(config) || injected.includes(CMS_AUTH_PLACEHOLDER)) {
-    console.error('Error de configuración: no se pudo escribir CMS_AUTH_BASE_URL en dist/admin/config.yml (falta la línea base_url).');
-    process.exit(1);
-  }
-  writeFileSync(distCmsConfig, injected);
-} else if (readFileSync(distCmsConfig, 'utf8').includes(CMS_AUTH_PLACEHOLDER)) {
-  console.warn('Aviso: CMS_AUTH_BASE_URL no está definida; el login del CMS (/admin) no funcionará hasta configurarla en Cloudflare Pages.');
+// Panel de contenido: la app compilada más su configuración de login.
+cpSync(ADMIN_BUILD, join(DIST, 'admin'), { recursive: true });
+writeFileSync(join(DIST, 'admin', 'config.json'), JSON.stringify({ authBaseUrl: cmsAuthBaseUrl || null }, null, 2) + '\n');
+if (!cmsAuthBaseUrl) {
+  console.warn('Aviso: CMS_AUTH_BASE_URL no está definida; el login del panel (/admin) no funcionará hasta configurarla en Cloudflare Pages.');
 }
+writeFileSync(join(DIST, BUILD_MARKER), 'Generado por build.mjs. Este directorio se borra completo en cada build.\n');
 
 console.log(`OK: dist/ generado (index.html ${indexHtml.length} bytes, landing-page.html ${landingHtml.length} bytes)`);

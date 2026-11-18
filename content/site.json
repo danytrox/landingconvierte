@@ -1,0 +1,28 @@
+{
+  "brand": "LandingConvierte",
+  "alternateName": "Landing Convierte",
+  "domain": "https://landingconvierte.cl",
+  "organizationDescription": "Diseño de páginas web y landing pages para negocios y profesionales en Chile.",
+  "areaServed": "Chile",
+  "themeColor": "#070c1f",
+  "skipLink": "Saltar al contenido",
+  "nav": [
+    { "label": "Servicios", "href": "#servicios" },
+    { "label": "Landing pages", "href": "/landing-page" },
+    { "label": "Proceso", "href": "#proceso" },
+    { "label": "Preguntas", "href": "#preguntas-frecuentes" }
+  ],
+  "navCta": "Pedir propuesta",
+  "navCtaHref": "#formulario",
+  "footer": {
+    "brand": "LandingConvierte",
+    "links": [
+      { "label": "Servicios", "href": "#servicios" },
+      { "label": "Diseño de landing pages", "href": "/landing-page" },
+      { "label": "Proceso", "href": "#proceso" },
+      { "label": "Preguntas frecuentes", "href": "#preguntas-frecuentes" },
+      { "label": "Pedir propuesta", "href": "#formulario" }
+    ],
+    "legal": "© {year} LandingConvierte. Diseño de páginas web para negocios en Chile."
+  }
+}

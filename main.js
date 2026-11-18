@@ -27,36 +27,8 @@
   // Hero demo: the plan of a landing page, built for the chosen trade
   const frame = document.querySelector('.demo-frame');
   if (frame) {
-    const examples = {
-      dental: {
-        accent: '#0e8f7e', url: 'tuclinica.cl', brand: 'Tu clínica dental',
-        title: 'Ortodoncia y limpieza dental en Providencia',
-        sub: 'Pide tu evaluación y te confirmamos la hora el mismo día.',
-        cta: 'Agendar evaluación',
-        trust: ['Atención de lunes a sábado', 'Presupuesto por escrito antes de empezar']
-      },
-      cafe: {
-        accent: '#b4471f', url: 'tucafeteria.cl', brand: 'Tu cafetería',
-        title: 'Café de especialidad y pastelería en Valparaíso',
-        sub: 'Reserva una mesa o encarga tu torta para retirar.',
-        cta: 'Reservar mesa',
-        trust: ['Abierto todos los días desde las 8:30', 'Opciones sin gluten y veganas']
-      },
-      contable: {
-        accent: '#5b3fc4', url: 'tuestudio.cl', brand: 'Tu estudio contable',
-        title: 'Contabilidad mensual para pymes y emprendedores',
-        sub: 'Impuestos, remuneraciones y patente al día, sin perseguir papeles.',
-        cta: 'Pedir cotización',
-        trust: ['Un contador asignado a tu empresa', 'Reporte mensual fácil de leer']
-      },
-      gasfiter: {
-        accent: '#c2410c', url: 'tugasfiter.cl', brand: 'Tu servicio de gasfitería',
-        title: 'Gasfíter a domicilio en Santiago',
-        sub: 'Fugas, calefont y destapes. Cuéntanos el problema y coordinamos la visita.',
-        cta: 'Pedir visita',
-        trust: ['Presupuesto antes de comenzar', 'Garantía por escrito del trabajo']
-      }
-    };
+    const dataEl = document.getElementById('demo-data');
+    const examples = dataEl ? JSON.parse(dataEl.textContent) : {};
     const tabs = [...document.querySelectorAll('.demo-tab')];
     const slot = name => frame.querySelector(`[data-demo="${name}"]`);
     let timer = 0;

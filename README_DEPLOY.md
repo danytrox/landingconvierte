@@ -18,23 +18,69 @@ git push -u origin main
 4. Elegir GitHub y el repositorio `landingconvierte`.
 5. Para esta landing usar:
    - Framework preset: `None`
-   - Build command: vacío
-   - Build output directory: `/`
+   - Build command: `node build.mjs`
+   - Build output directory: `dist`
 6. Publicar.
 7. En **Custom domains**, agregar el dominio comprado en NIC Chile.
 8. En NIC Chile configurar los nameservers que entregue Cloudflare.
 
 ## Estructura del sitio
 
-- `index.html` y `landing-page.html`: las dos páginas. Cloudflare Pages sirve `landing-page.html` como `/landing-page`.
-- `styles.css` y `main.js`: estilos y comportamiento compartidos (menú móvil, demo del hero, envío del formulario).
+Las páginas se generan: el contenido vive en `content/*.json` y `build.mjs` arma `dist/`.
+
+- `content/site.json`: marca, menú y pie de página. `content/index.json` y `content/landing-page.json`: textos de cada página (SEO, secciones, preguntas frecuentes, formulario).
+- `build.mjs`: plantillas HTML. Genera `dist/index.html` y `dist/landing-page.html` y copia los archivos estáticos. Cloudflare Pages sirve `landing-page.html` como `/landing-page`.
+- `admin/`: Decap CMS (`index.html` + `config.yml`). `worker/`: proxy OAuth de GitHub para Decap.
+- `styles.css` y `main.js`: estilos y comportamiento compartidos (menú móvil, demo del hero, envío del formulario). La demo del hero lee sus rubros del bloque `demo-data` que genera el build.
 - `fonts/archivo-latin.woff2`: tipografía Archivo (licencia OFL), servida desde el propio dominio.
 - `404.html`: página de error. `_headers`: cabeceras de seguridad y caché para Cloudflare Pages.
 - `robots.txt`, `sitemap.xml`, `site.webmanifest`, `favicon.svg`, `apple-touch-icon.png`, `logo.png`, `og-image.png`.
 
-El dominio configurado es `https://landingconvierte.cl/`. Si cambia, actualizar `index.html`, `landing-page.html`, `robots.txt` y `sitemap.xml`.
+Si el dominio cambia, actualizar `content/` (o desde el CMS), `robots.txt`, `sitemap.xml`, `admin/config.yml` y `ALLOWED_ORIGIN` en `worker/wrangler.toml`.
 
-Para probar en local hace falta un servidor (las rutas son absolutas): `python3 -m http.server` y abrir `http://localhost:8000/`.
+Probar en local (requiere Node 18+):
+
+```bash
+node build.mjs
+python3 -m http.server --directory dist
+```
+
+y abrir `http://localhost:8000/`.
+
+## Editar el contenido con Decap CMS
+
+El panel queda en `https://landingconvierte.cl/admin/`. Al guardar, Decap hace un commit en `main` y Cloudflare Pages vuelve a publicar solo (1-2 minutos).
+
+Configuración única (todo gratis):
+
+1. **Desplegar el Worker OAuth** (desde `worker/`):
+
+   ```bash
+   cd worker
+   npx wrangler@3 login
+   npx wrangler@3 deploy
+   ```
+
+   Anotar la URL que entrega, por ejemplo `https://landingconvierte-cms-auth.TU-CUENTA.workers.dev`.
+
+2. **Crear una OAuth App en GitHub**: Settings → Developer settings → OAuth Apps → New OAuth App.
+   - Homepage URL: `https://landingconvierte.cl`
+   - Authorization callback URL: `<URL del Worker>/callback`
+
+   Copiar el Client ID y generar un Client Secret.
+
+3. **Guardar las credenciales en el Worker**:
+
+   ```bash
+   npx wrangler@3 secret put GITHUB_CLIENT_ID
+   npx wrangler@3 secret put GITHUB_CLIENT_SECRET
+   ```
+
+4. **Apuntar Decap al Worker**: en `admin/config.yml`, reemplazar `base_url` por la URL del Worker y hacer commit.
+
+5. **Cambiar el build de Cloudflare Pages** (Settings → Builds): build command `node build.mjs`, output directory `dist`. Hacerlo antes o junto con el merge de este cambio a `main`, porque las páginas HTML ya no están en la raíz del repositorio.
+
+Solo pueden editar las cuentas de GitHub con permiso de escritura en el repositorio. El Worker solo entrega el token al origen definido en `ALLOWED_ORIGIN` y valida el parámetro `state` del flujo OAuth.
 
 ## Formulario de contacto sin backend
 
@@ -42,7 +88,7 @@ La landing usa Web3Forms, compatible con GitHub Pages y Cloudflare Pages:
 
 1. Crear una cuenta gratuita en https://web3forms.com/.
 2. Generar un Access Key para el correo que recibirá las consultas.
-3. Poner esa clave en el campo oculto `access_key` del formulario en `index.html`.
+3. Poner esa clave en `contact.web3formsAccessKey` de `content/index.json` (o en el CMS: Página de inicio → Formulario de contacto).
 4. Publicar nuevamente.
 
 El plan gratuito publicado por Web3Forms indica 250 envíos mensuales. No pongas una contraseña ni una API privada en el HTML; el Access Key de Web3Forms está diseñado para usarse en formularios frontend.
@@ -50,4 +96,4 @@ El plan gratuito publicado por Web3Forms indica 250 envíos mensuales. No pongas
 Alternativa totalmente Cloudflare: un Worker puede recibir el formulario, pero el envío saliente de correo de Cloudflare Email Service requiere Workers Paid. Por eso Web3Forms es la opción gratuita más simple para esta landing.
 ## GitHub Pages como alternativa
 
-En el repositorio: **Settings** → **Pages** → publicar desde `main` y `/root`. Luego agregar el dominio personalizado y configurar DNS según GitHub. Cloudflare Pages sigue siendo la opción recomendada porque conecta el repositorio y el dominio desde el mismo servicio.
+En el repositorio: **Settings** → **Pages** → publicar con GitHub Actions ejecutando `node build.mjs` y subiendo `dist/`. Luego agregar el dominio personalizado y configurar DNS según GitHub. Cloudflare Pages sigue siendo la opción recomendada porque conecta el repositorio y el dominio desde el mismo servicio.

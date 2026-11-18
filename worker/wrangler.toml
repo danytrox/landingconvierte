@@ -1,0 +1,8 @@
+name = "landingconvierte-cms-auth"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+
+[vars]
+# Origin allowed to receive the GitHub token (the site that hosts /admin).
+ALLOWED_ORIGIN = "https://landingconvierte.cl"
+# Secrets (set with `wrangler secret put`): GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET

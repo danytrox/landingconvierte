@@ -1,2 +1,5 @@
 .playwright-mcp/
 .atl/
+dist/
+node_modules/
+worker/.wrangler/
